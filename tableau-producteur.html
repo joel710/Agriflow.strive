@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agritech - La technologie au service de l'agriculture</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#4CAF50', secondary: '#FF9800' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="auth/protect.js"></script>
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hero-section {
+            background-image: url('https://readdy.ai/api/search-image?query=beautiful%20modern%20agriculture%20field%20with%20farmer%20using%20digital%20tablet%2C%20soft%20natural%20lighting%2C%20green%20crops%2C%20technology%20in%20farming%2C%20professional%20high-quality%20photo%20with%20blurred%20background%20on%20the%20left%20side%20for%20text%20placement%2C%20seamless%20transition%20from%20white%20to%20image&width=1920&height=800&seq=1&orientation=landscape');
+            background-size: cover;
+            background-position: center;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            top: 2px;
+            left: 6px;
+            transform: rotate(45deg);
+        }
+
+        .custom-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .custom-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+        .tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Style actif pour les onglets */
+.nav-tab.active-tab {
+    background-color: rgb(0 123 255 / 0.2); /* bg-primary/20 */
+}
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-2xl font-['Pacifico'] text-primary">Agritech</a>
+                <nav class="hidden md:flex ml-10">
+                    <a href="index.html"
+                        class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accueil</a>
+                    <a href="shop.html"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">MarketPlace</a>
+                    <a href="dash.html"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Producteurs</a>
+                    <a href="customerboard.html"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clients</a>
+                    <a href="#"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Livraison</a>
+                    <a href="#"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">À
+                        propos</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <a href="#"
+                    class="hidden md:inline-block px-4 py-2 text-gray-700 hover:text-primary mr-2 whitespace-nowrap">Se
+                    connecter</a>
+                <a href="#"
+                    class="bg-primary text-white px-5 py-2 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">S'inscrire</a>
+                <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    
+    <!-- ############################################## -->
+        <!-- Ajouter cette section après le Hero Section existant -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <!-- Dashboard Producteur -->
+                <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Sidebar -->
+                        <div class="bg-gray-800 text-white p-4 md:w-64">
+                            <div class="flex items-center mb-8">
+                                <span class="text-xl font-['Pacifico'] text-white">Agritech</span>
+                            </div>
+        
+                            <nav class="space-y-2">
+                                <a href="#"   class="nav-tab flex items-center p-3 bg-primary/20 rounded" data-target="dashboard">
+                                    <i class="ri-dashboard-line mr-3"></i>
+                                    <span>Tableau de bord</span>
+                                </a>
+                                <a href="#"  class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded" data-target="mes-produits">
+                                    <i class="ri-store-2-line mr-3"></i>
+                                    <span>Mes produits</span>
+                                </a>
+                                <a href="#"  class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded" data-target="commandes">
+                                    <i class="ri-shopping-cart-2-line mr-3"></i>
+                                    <span>Commandes</span>
+                                </a>
+                                <a href="#"  class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded" data-target="livraisons">
+                                    <i class="ri-truck-line mr-3"></i>
+                                    <span>Livraisons</span>
+                                </a>
+                                <a href="#" data-target="statistiques" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded">
+                                    <i class="ri-bar-chart-box-line mr-3"></i>
+                                    <span>Statistiques</span>
+                                </a>
+                                <a href="#" data-target="parametres" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded">
+                                    <i class="ri-settings-3-line mr-3"></i>
+                                    <span>Paramètres</span>
+                                </a>
+                            </nav>
+                        </div>
+        
+                        <!-- Main Content -->
+                        <div class="flex-1 p-6">
+
+                            <!-- Section Tableau de bord -->
+                            <div id="dashboard" class="dashboard-section tab-content active">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-xl font-semibold">Tableau de bord</h3>
+                                    <div class="flex items-center">
+                                        <div class="relative mr-3">
+                                            <i class="ri-notification-3-line text-gray-500"></i>
+                                            <span
+                                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <img src="https://readdy.ai/api/search-image?query=professional%20farmer%20portrait%2C%20close-up%20headshot%2C%20neutral%20background%2C%2040%20year%20old%20man&width=40&height=40&seq=3&orientation=squarish"
+                                                alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                                            <span class="ml-2 text-gray-700">Thomas Dupont</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stats Cards -->
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Ventes du jour</p>
+                                                <p class="text-2xl font-semibold">386 000 FCFA</p>
+                                            </div>
+                                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <i class="ri-money-euro-circle-line text-blue-500"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-green-600 mt-2">+12% par rapport à hier</p>
+                                    </div>
+                                
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Commandes</p>
+                                                <p class="text-2xl font-semibold">24</p>
+                                            </div>
+                                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                                <i class="ri-shopping-cart-2-line text-green-500"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-green-600 mt-2">5 nouvelles aujourd'hui</p>
+                                    </div>
+                                
+                                    <div class="bg-orange-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Produits</p>
+                                                <p class="text-2xl font-semibold">42</p>
+                                            </div>
+                                            <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                                <i class="ri-store-2-line text-orange-500"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-orange-600 mt-2">3 stocks faibles</p>
+                                    </div>
+                                
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Clients</p>
+                                                <p class="text-2xl font-semibold">156</p>
+                                            </div>
+                                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                                <i class="ri-user-line text-purple-500"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-purple-600 mt-2">+8 cette semaine</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sales Chart -->
+                                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                                    <h4 class="text-lg font-medium mb-4">Ventes mensuelles</h4>
+                                    <div id="salesChart" style="width: 100%; height: 300px;"></div>
+                                </div>
+                                
+                                <!-- Recent Orders -->
+                                <div class="bg-white rounded-lg shadow p-4">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h4 class="text-lg font-medium">Commandes récentes</h4>
+                                        <a href="#" class="text-primary text-sm">Voir tout</a>
+                                    </div>
+                                
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full">
+                                            <thead>
+                                                <tr class="text-left text-gray-500 text-sm">
+                                                    <th class="pb-3 font-medium">Client</th>
+                                                    <th class="pb-3 font-medium">Produits</th>
+                                                    <th class="pb-3 font-medium">Montant</th>
+                                                    <th class="pb-3 font-medium">Statut</th>
+                                                    <th class="pb-3 font-medium">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="border-t border-gray-100">
+                                                    <td class="py-3">Marie Lefevre</td>
+                                                    <td class="py-3">Tomates, Courgettes, Aubergines</td>
+                                                    <td class="py-3">42,50 FCFA</td>
+                                                    <td class="py-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">En
+                                                            préparation</span></td>
+                                                    <td class="py-3">
+                                                        <button class="text-primary hover:text-primary-dark">Détails</button>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-t border-gray-100">
+                                                    <td class="py-3">Pierre Moreau</td>
+                                                    <td class="py-3">Pommes, Poires</td>
+                                                    <td class="py-3">18,75 FCFA</td>
+                                                    <td class="py-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">En
+                                                            livraison</span></td>
+                                                    <td class="py-3">
+                                                        <button class="text-primary hover:text-primary-dark">Détails</button>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-t border-gray-100">
+                                                    <td class="py-3">Restaurant Le Terroir</td>
+                                                    <td class="py-3">Carottes, Pommes de terre, Oignons</td>
+                                                    <td class="py-3">87,20 FCFA</td>
+                                                    <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Livré</span>
+                                                    </td>
+                                                    <td class="py-3">
+                                                        <button class="text-primary hover:text-primary-dark">Détails</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section Mes Produits -->
+                            <div id="mes-produits" class="mb-12 tab-content">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-2xl font-bold text-gray-900">Mes produits</h3>
+                                    <button
+                                        class="bg-primary text-white px-4 py-2 !rounded-button hover:bg-opacity-90 transition">
+                                        <i class="ri-add-line mr-2"></i>Ajouter un produit
+                                    </button>
+                                </div>
+        
+                                <!-- Formulaire Ajout Produit -->
+                                <div class="bg-white rounded-lg shadow p-4 mb-6 hidden" id="product-form">
+                                    <form class="space-y-4">
+                                        <div class="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-gray-700 mb-2">Nom du produit</label>
+                                                <input type="text"
+                                                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
+                                            </div>
+                                            <div>
+                                                <label class="block text-gray-700 mb-2">Catégorie</label>
+                                                <select
+                                                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
+                                                    <option>Légumes</option>
+                                                    <option>Fruits</option>
+                                                    <option>Produits laitiers</option>
+                                                </select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="grid md:grid-cols-3 gap-4">
+                                            <div>
+                                                <label class="block text-gray-700 mb-2">Prix (€)</label>
+                                                <input type="number"
+                                                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
+                                            </div>
+                                            <div>
+                                                <label class="block text-gray-700 mb-2">Quantité</label>
+                                                <input type="number"
+                                                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
+                                            </div>
+                                            <div>
+                                                <label class="block text-gray-700 mb-2">Stock</label>
+                                                <select
+                                                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
+                                                    <option>En stock</option>
+                                                    <option>Stock faible</option>
+                                                    <option>Rupture</option>
+                                                </select>
+                                            </div>
+                                        </div>
+        
+                                        <div>
+                                            <label class="block text-gray-700 mb-2">Description</label>
+                                            <textarea rows="3"
+                                                class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary"></textarea>
+                                        </div>
+        
+                                        <div>
+                                            <label class="block text-gray-700 mb-2">Image du produit</label>
+                                            <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center">
+                                                <i class="ri-image-add-line text-3xl text-gray-400 mb-2"></i>
+                                                <p class="text-gray-500">Glissez-déposez ou <span
+                                                        class="text-primary cursor-pointer">parcourir</span></p>
+                                            </div>
+                                        </div>
+        
+                                        <button
+                                            class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition">
+                                            Enregistrer le produit
+                                        </button>
+                                    </form>
+                                </div>
+        
+                                <!-- Liste des Produits -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <!-- Produit 1 -->
+                                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                                        <div class="h-48 bg-gray-100 relative">
+                                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape"
+                                                class="w-full h-full object-cover">
+                                            <span
+                                                class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded text-xs">En
+                                                stock</span>
+                                        </div>
+                                        <div class="p-4">
+                                            <h4 class="font-semibold text-lg">Tomates Bio</h4>
+                                            <div class="flex justify-between items-center mt-2">
+                                                <span class="text-primary font-bold">3,50 FCFA/kg</span>
+                                                <div class="flex items-center">
+                                                    <i
+                                                        class="ri-edit-box-line text-gray-500 hover:text-primary cursor-pointer mr-2"></i>
+                                                    <i
+                                                        class="ri-delete-bin-line text-gray-500 hover:text-red-500 cursor-pointer"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Produit 2 -->
+                                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                                        <div class="h-48 bg-gray-100 relative">
+                                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape"
+                                                class="w-full h-full object-cover">
+                                            <span class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded text-xs">En
+                                                stock</span>
+                                        </div>
+                                        <div class="p-4">
+                                            <h4 class="font-semibold text-lg">Tomates Bio</h4>
+                                            <div class="flex justify-between items-center mt-2">
+                                                <span class="text-primary font-bold">3,50 FCFA/kg</span>
+                                                <div class="flex items-center">
+                                                    <i class="ri-edit-box-line text-gray-500 hover:text-primary cursor-pointer mr-2"></i>
+                                                    <i class="ri-delete-bin-line text-gray-500 hover:text-red-500 cursor-pointer"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Produit 3 -->
+                                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                                        <div class="h-48 bg-gray-100 relative">
+                                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape"
+                                                class="w-full h-full object-cover">
+                                            <span class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded text-xs">En
+                                                stock</span>
+                                        </div>
+                                        <div class="p-4">
+                                            <h4 class="font-semibold text-lg">Tomates Bio</h4>
+                                            <div class="flex justify-between items-center mt-2">
+                                                <span class="text-primary font-bold">3,50 FCFA/kg</span>
+                                                <div class="flex items-center">
+                                                    <i class="ri-edit-box-line text-gray-500 hover:text-primary cursor-pointer mr-2"></i>
+                                                    <i class="ri-delete-bin-line text-gray-500 hover:text-red-500 cursor-pointer"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Plus de produits... -->
+                                </div>
+                            </div>
+
+                            <!-- Section Commandes (à ajouter si manquante) -->
+                            <div id="commandes" class="mb-12 tab-content">
+                                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="text-lg font-semibold">🛒 Historique des commandes</h3>
+                                        <div class="flex gap-2">
+                                            <input type="date" class="border rounded px-2 py-1 text-sm">
+                                            <select class="border rounded px-2 py-1 text-sm">
+                                                <option>Tous les statuts</option>
+                                                <option>Livré</option>
+                                                <option>En cours</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr class="text-left text-sm text-gray-500 border-b">
+                                                <th class="pb-3">Date</th>
+                                                <th class="pb-3">Produits</th>
+                                                <th class="pb-3">Montant</th>
+                                                <th class="pb-3">Statut</th>
+                                                <th class="pb-3"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b">
+                                                <td class="py-3">15/06/2024</td>
+                                                <td class="py-3">Tomates (5kg), Carottes (3kg)</td>
+                                                <td class="py-3">45,60 FCFA</td>
+                                                <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Livré</span></td>
+                                                <td class="py-3"><button class="text-primary hover:text-primary-dark">Détails</button></td>
+                                            </tr>
+                                            <!-- Plus de lignes... -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Section Livraisons -->
+                            <div id="livraisons" class="mb-12 tab-content">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6">Suivi des livraisons</h3>
+        
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <!-- Carte de suivi -->
+                                    <div class="bg-white rounded-lg shadow p-4 h-96">
+                                        <div class="h-full bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <i class="ri-map-pin-line text-3xl text-gray-400"></i>
+                                        </div>
+                                    </div>
+        
+                                    <!-- Détails Livraison -->
+                                    <div class="space-y-4">
+                                        <div class="bg-white rounded-lg shadow p-4">
+                                            <div class="flex items-center mb-3">
+                                                <div
+                                                    class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                                                    <i class="ri-truck-line text-primary"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-semibold">Livraison #12345</h4>
+                                                    <p class="text-sm text-gray-500">En cours vers Paris</p>
+                                                </div>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <div class="flex justify-between text-sm">
+                                                    <span>Statut:</span>
+                                                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">En
+                                                        transit</span>
+                                                </div>
+                                                <div class="flex justify-between text-sm">
+                                                    <span>Client:</span>
+                                                    <span>Marie Dupont</span>
+                                                </div>
+                                                <div class="flex justify-between text-sm">
+                                                    <span>Date estimée:</span>
+                                                    <span>25/06/2024 15:30</span>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <!-- Historique Statut -->
+                                        <div class="bg-white rounded-lg shadow p-4">
+                                            <h4 class="font-semibold mb-3">Historique</h4>
+                                            <div class="space-y-2">
+                                                <div class="flex items-center text-sm">
+                                                    <div
+                                                        class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                                                        <i class="ri-check-line text-green-600 text-xs"></i>
+                                                    </div>
+                                                    <span>Commande préparée - 24/06 09:45</span>
+                                                </div>
+                                                <div class="flex items-center text-sm">
+                                                    <div
+                                                        class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                                        <i class="ri-truck-line text-blue-600 text-xs"></i>
+                                                    </div>
+                                                    <span>Prise en charge transporteur - 24/06 14:20</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-white rounded-lg shadow p-6 mb-8">
+                                            <h3 class="text-lg font-semibold mb-4">🚚 Suivi des livraisons</h3>
+                                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
+                                                <div class="flex items-center">
+                                                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                                                        <i class="ri-truck-line text-primary"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-medium">Livraison #1254</div>
+                                                        <div class="text-sm text-gray-500">En route - Livraison prévue à 15h30</div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-sm">
+                                                    <div class="text-gray-500">Livreur: Jean Martin</div>
+                                                    <div class="text-primary">+33 6 12 34 56 78</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- Section Statistiques -->
+                            <div id="statistiques" class="mb-12 tab-content">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6">Statistiques</h3>
+        
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <!-- Graphique Ventes -->
+                                    <div class="bg-white rounded-lg shadow p-4">
+                                        <h4 class="font-semibold mb-4">Évolution des ventes</h4>
+                                        <div id="sales-chart" class="h-64"></div>
+                                    </div>
+        
+                                    <!-- Répartition Produits -->
+                                    <div class="bg-white rounded-lg shadow p-4">
+                                        <h4 class="font-semibold mb-4">Répartition des ventes</h4>
+                                        <div id="products-chart" class="h-64"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section Paramètres (à ajouter si manquante) -->
+                            <div id="parametres" class="mb-12 tab-content">
+                                ...
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+        </section>
+    <!-- ############################################### -->
+
+    
+    
+    
+    <!-- Call to Action -->
+    <section class="py-16 bg-primary/10">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Prêt à moderniser votre activité agricole ?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-8">Rejoignez notre plateforme et découvrez comment la technologie
+                peut transformer votre exploitation agricole.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#"
+                    class="bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">Créer
+                    un compte producteur</a>
+                <a href="#"
+                    class="bg-white text-primary border border-primary px-8 py-3 !rounded-button hover:bg-gray-50 transition whitespace-nowrap">Découvrir
+                    l'application</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a href="#" class="text-2xl font-['Pacifico'] text-white mb-4 inline-block">Agritech</a>
+                    <p class="text-gray-400 mb-4">La technologie au service de l'agriculture. Connectons producteurs et
+                        consommateurs.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-facebook-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-twitter-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-instagram-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-linkedin-fill ri-lg"></i>
+                        </a>
+                    </div>
+                </div>
+    
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Accueil</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">À propos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Fonctionnalités</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Tarifs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+    
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Centre d'aide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Tutoriels</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Communauté</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support technique</a></li>
+                    </ul>
+                </div>
+    
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Recevez nos actualités et offres spéciales.</p>
+                    <form class="mb-4">
+                        <div class="flex">
+                            <input type="email" placeholder="Votre email"
+                                class="px-4 py-2 w-full text-gray-800 rounded-l border-none">
+                            <button type="submit"
+                                class="bg-primary text-white px-4 py-2 !rounded-r-button hover:bg-opacity-90 transition whitespace-nowrap">S'abonner</button>
+                        </div>
+                    </form>
+                    <div class="flex items-center">
+                        <label class="custom-switch mr-3">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="text-sm text-gray-400">J'accepte de recevoir des emails</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Agritech. Tous droits réservés.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Politique de confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Conditions d'utilisation</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Mentions légales</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+                const tabs = document.querySelectorAll('.nav-tab');
+                const contents = document.querySelectorAll('.tab-content');
+
+                function activateTab(targetId) {
+                    // Désactiver toutes les sections
+                    contents.forEach(content => content.classList.remove('active'));
+
+                    // Désactiver tous les onglets
+                    tabs.forEach(tab => tab.classList.remove('active-tab', 'bg-primary/20'));
+
+                    // Activer la section cible
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) targetContent.classList.add('active');
+
+                    // Activer l'onglet cliqué
+                    const activeTab = document.querySelector(`.nav-tab[data-target="${targetId}"]`);
+                    if (activeTab) activeTab.classList.add('active-tab', 'bg-primary/20');
+                }
+
+                // Gestionnaire de clic pour les onglets
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.dataset.target;
+                        activateTab(targetId);
+                    });
+                });
+
+                // Activer l'onglet par défaut au chargement
+                activateTab('dashboard');
+            });
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sales Chart
+            var salesChartDom = document.getElementById('salesChart');
+            if (salesChartDom) {
+                var salesChart = echarts.init(salesChartDom);
+                var salesOption = {
+                    animation: false,
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        borderColor: '#eee',
+                        borderWidth: 1,
+                        textStyle: {
+                            color: '#1f2937'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        top: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                        axisLine: {
+                            lineStyle: {
+                                color: '#ddd'
+                            }
+                        },
+                        axisLabel: {
+                            color: '#1f2937'
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            color: '#1f2937'
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#eee'
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Ventes',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: 'rgba(87, 181, 231, 1)'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(87, 181, 231, 0.2)'
+                                    }, {
+                                        offset: 1, color: 'rgba(87, 181, 231, 0.05)'
+                                    }]
+                                }
+                            },
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            showSymbol: false,
+                            data: [1200, 1350, 1800, 2100, 1950, 2300, 2450, 2800, 3100, 3450, 3800, 4200]
+                        },
+                        {
+                            name: 'Commandes',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: 'rgba(141, 211, 199, 1)'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(141, 211, 199, 0.2)'
+                                    }, {
+                                        offset: 1, color: 'rgba(141, 211, 199, 0.05)'
+                                    }]
+                                }
+                            },
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            showSymbol: false,
+                            data: [50, 65, 85, 95, 90, 110, 120, 135, 150, 165, 180, 195]
+                        }
+                    ]
+                };
+                salesChart.setOption(salesOption);
+
+                window.addEventListener('resize', function () {
+                    salesChart.resize();
+                });
+            }
+        });
+        // Scripts pour les graphiques
+            document.addEventListener('DOMContentLoaded', function () {
+                // Graphique des ventes
+                const salesChart = echarts.init(document.getElementById('sales-chart'));
+                salesChart.setOption({
+                    xAxis: { type: 'category', data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'] },
+                    yAxis: { type: 'value' },
+                    series: [{
+                        data: [1200, 2000, 1500, 3000, 2500, 4000],
+                        type: 'line',
+                        smooth: true,
+                        color: '#4CAF50'
+                    }]
+                });
+
+                // Graphique circulaire
+                const productsChart = echarts.init(document.getElementById('products-chart'));
+                productsChart.setOption({
+                    tooltip: { trigger: 'item' },
+                    series: [{
+                        type: 'pie',
+                        radius: '70%',
+                        data: [
+                            { value: 35, name: 'Légumes' },
+                            { value: 25, name: 'Fruits' },
+                            { value: 20, name: 'Produits laitiers' },
+                            { value: 20, name: 'Autres' }
+                        ],
+                        color: ['#4CAF50', '#FF9800', '#8BC34A', '#CDDC39']
+                    }]
+                });
+
+                // Gestion du formulaire produit
+                document.querySelector('button').addEventListener('click', () => {
+                    document.getElementById('product-form').classList.toggle('hidden');
+                });
+
+                
+            });
+    </script>
+    </body>
+    
+    </html>

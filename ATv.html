@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agritech - La technologie au service de l'agriculture</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#4CAF50',secondary:'#FF9800'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .hero-section {
+            background-image: url('https://readdy.ai/api/search-image?query=beautiful%20modern%20agriculture%20field%20with%20farmer%20using%20digital%20tablet%2C%20soft%20natural%20lighting%2C%20green%20crops%2C%20technology%20in%20farming%2C%20professional%20high-quality%20photo%20with%20blurred%20background%20on%20the%20left%20side%20for%20text%20placement%2C%20seamless%20transition%20from%20white%20to%20image&width=1920&height=800&seq=1&orientation=landscape');
+            background-size: cover;
+            background-position: center;
+        }
+        input:focus {
+            outline: none;
+        }
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .custom-checkbox:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            top: 2px;
+            left: 6px;
+            transform: rotate(45deg);
+        }
+        .custom-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .custom-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-2xl font-['Pacifico'] text-primary">Agritech</a>
+                <nav class="hidden md:flex ml-10">
+                    <a href="#" class="mx-3 text-gray-700 hover:text-primary transition">Accueil</a>
+                    <a href="#" class="mx-3 text-gray-700 hover:text-primary transition">Fonctionnalités</a>
+                    <a href="#" class="mx-3 text-gray-700 hover:text-primary transition">Producteurs</a>
+                    <a href="#" class="mx-3 text-gray-700 hover:text-primary transition">Clients</a>
+                    <a href="#" class="mx-3 text-gray-700 hover:text-primary transition">Contact</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <a href="#" class="hidden md:inline-block px-4 py-2 text-gray-700 hover:text-primary mr-2 whitespace-nowrap">Se connecter</a>
+                <a href="#" class="bg-primary text-white px-5 py-2 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">S'inscrire</a>
+                <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent"></div>
+        <div class="container mx-auto px-4 py-20 md:py-32 relative">
+            <div class="w-full max-w-2xl">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">La technologie au service de l'agriculture</h1>
+                <p class="text-lg md:text-xl text-gray-700 mb-8">Plateforme de gestion, de vente et de livraison pour les producteurs agricoles. Simplifiez votre activité et augmentez vos revenus.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#" class="bg-primary text-white px-6 py-3 !rounded-button hover:bg-opacity-90 transition text-center whitespace-nowrap">Je suis producteur</a>
+                    <a href="#" class="bg-white text-primary border border-primary px-6 py-3 !rounded-button hover:bg-gray-50 transition text-center whitespace-nowrap">Je suis client</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ############################################## -->
+     
+
+    <!-- ################################################## -->
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Problématiques agricoles résolues</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Nous avons identifié les défis majeurs auxquels sont confrontés les producteurs agricoles et développé des solutions innovantes.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded shadow-md hover:shadow-lg transition">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-store-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Gestion inefficace des stocks</h3>
+                    <p class="text-gray-600">Réduisez les pertes post-récolte grâce à notre système de gestion automatisé qui vous alerte en temps réel.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded shadow-md hover:shadow-lg transition">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-user-search-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Difficulté à trouver des clients</h3>
+                    <p class="text-gray-600">Connectez-vous directement avec des clients professionnels et particuliers intéressés par vos produits.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded shadow-md hover:shadow-lg transition">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-truck-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Absence de système de livraison</h3>
+                    <p class="text-gray-600">Profitez d'un réseau de livraison intégré ou proposez vos propres services de livraison pour atteindre plus de clients.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">La solution Agritech</h2>
+                    <p class="text-gray-600 mb-6">Notre plateforme complète répond à tous les besoins des producteurs agricoles modernes.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 flex items-center justify-center mt-1">
+                                <i class="ri-check-line ri-lg text-primary"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium">Application mobile et web</h3>
+                                <p class="text-gray-600">Gérez votre activité où que vous soyez, sur tous vos appareils.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 flex items-center justify-center mt-1">
+                                <i class="ri-check-line ri-lg text-primary"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium">Plateforme de vente directe</h3>
+                                <p class="text-gray-600">Connectez-vous directement avec vos clients sans intermédiaires.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 flex items-center justify-center mt-1">
+                                <i class="ri-check-line ri-lg text-primary"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium">Système de livraison intégré</h3>
+                                <p class="text-gray-600">Livrez vos produits ou utilisez notre réseau de partenaires.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 flex items-center justify-center mt-1">
+                                <i class="ri-check-line ri-lg text-primary"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium">Gestion automatisée des stocks</h3>
+                                <p class="text-gray-600">Suivez vos inventaires en temps réel et réduisez les pertes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <img src="https://readdy.ai/api/search-image?query=modern%20farmer%20using%20digital%20tablet%20and%20smartphone%20to%20manage%20farm%20operations%2C%20professional%20high-quality%20photo%20showing%20technology%20in%20agriculture%2C%20person%20checking%20crop%20data%20on%20multiple%20devices%2C%20clean%20background&width=600&height=500&seq=2&orientation=landscape" alt="Solution Agritech" class="rounded-lg shadow-lg w-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Functionalities Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Fonctionnalités principales</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Découvrez les outils puissants que nous proposons aux producteurs et aux clients.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Producteurs -->
+                <div class="md:w-1/2 bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i class="ri-user-star-line ri-xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold ml-4">Pour les producteurs</h3>
+                    </div>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-user-add-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Création de compte professionnel</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-add-box-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Ajout de produits avec photos et descriptions</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-stock-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Gestion des ventes et des stocks en temps réel</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-notification-3-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Notifications instantanées pour les commandes</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-route-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Suivi des commandes et des livraisons</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-bar-chart-2-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Statistiques et rapports de vente</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Clients -->
+                <div class="md:w-1/2 bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i class="ri-shopping-bag-line ri-xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold ml-4">Pour les clients</h3>
+                    </div>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-search-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Navigation par catégories de produits</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-shopping-cart-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Commande en ligne simple et intuitive</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-secure-payment-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Paiement sécurisé par carte ou mobile</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-map-pin-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Options de livraison ou retrait sur place</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-star-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Notation et avis sur les produits</span>
+                        </li>
+                        <li class="flex">
+                            <div class="w-6 h-6 flex items-center justify-center mt-1">
+                                <i class="ri-history-line text-primary"></i>
+                            </div>
+                            <span class="ml-3 text-gray-700">Historique des commandes et favoris</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delivery System Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Système de livraison intégré</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Notre plateforme propose un système de livraison flexible et efficace pour garantir la fraîcheur de vos produits.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <div class="rounded-lg overflow-hidden shadow-lg">
+                        <div style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png')" class="w-full h-96 bg-center bg-cover"></div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <div class="space-y-6">
+                        <div class="bg-white p-5 rounded-lg shadow-md">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="ri-truck-line ri-lg text-primary"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold ml-3">Options de livraison flexibles</h3>
+                            </div>
+                            <p class="text-gray-600">Livraison par les agriculteurs eux-mêmes ou par notre réseau de livreurs partenaires selon vos préférences.</p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-lg shadow-md">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="ri-money-euro-circle-line ri-lg text-primary"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold ml-3">Estimation automatique des frais</h3>
+                            </div>
+                            <p class="text-gray-600">Calcul précis des frais de livraison en fonction de la distance et du volume de la commande.</p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-lg shadow-md">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="ri-map-pin-time-line ri-lg text-primary"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold ml-3">Suivi en temps réel</h3>
+                            </div>
+                            <p class="text-gray-600">Suivez vos livraisons en temps réel sur la carte et recevez des notifications à chaque étape.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Interface intuitive</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Découvrez notre tableau de bord conçu pour simplifier la gestion quotidienne de votre activité agricole.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Sidebar -->
+                    <div class="bg-gray-800 text-white p-4 md:w-64">
+                        <div class="flex items-center mb-8">
+                            <span class="text-xl font-['Pacifico'] text-white">Agritech</span>
+                        </div>
+                        
+                        <nav class="space-y-2">
+                            <a href="#" class="flex items-center p-3 bg-primary/20 rounded">
+                                <i class="ri-dashboard-line mr-3"></i>
+                                <span>Tableau de bord</span>
+                            </a>
+                            <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                                <i class="ri-store-2-line mr-3"></i>
+                                <span>Mes produits</span>
+                            </a>
+                            <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                                <i class="ri-shopping-cart-2-line mr-3"></i>
+                                <span>Commandes</span>
+                            </a>
+                            <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                                <i class="ri-truck-line mr-3"></i>
+                                <span>Livraisons</span>
+                            </a>
+                            <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                                <i class="ri-bar-chart-box-line mr-3"></i>
+                                <span>Statistiques</span>
+                            </a>
+                            <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                                <i class="ri-settings-3-line mr-3"></i>
+                                <span>Paramètres</span>
+                            </a>
+                        </nav>
+                    </div>
+                    
+                    <!-- Main Content -->
+                    <div class="flex-1 p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold">Tableau de bord</h3>
+                            <div class="flex items-center">
+                                <div class="relative mr-3">
+                                    <i class="ri-notification-3-line text-gray-500"></i>
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <img src="https://readdy.ai/api/search-image?query=professional%20farmer%20portrait%2C%20close-up%20headshot%2C%20neutral%20background%2C%2040%20year%20old%20man&width=40&height=40&seq=3&orientation=squarish" alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                                    <span class="ml-2 text-gray-700">Thomas Dupont</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Ventes du jour</p>
+                                        <p class="text-2xl font-semibold">386 €</p>
+                                    </div>
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <i class="ri-money-euro-circle-line text-blue-500"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-green-600 mt-2">+12% par rapport à hier</p>
+                            </div>
+                            
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Commandes</p>
+                                        <p class="text-2xl font-semibold">24</p>
+                                    </div>
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i class="ri-shopping-cart-2-line text-green-500"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-green-600 mt-2">5 nouvelles aujourd'hui</p>
+                            </div>
+                            
+                            <div class="bg-orange-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Produits</p>
+                                        <p class="text-2xl font-semibold">42</p>
+                                    </div>
+                                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                        <i class="ri-store-2-line text-orange-500"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-orange-600 mt-2">3 stocks faibles</p>
+                            </div>
+                            
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Clients</p>
+                                        <p class="text-2xl font-semibold">156</p>
+                                    </div>
+                                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                        <i class="ri-user-line text-purple-500"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-purple-600 mt-2">+8 cette semaine</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Sales Chart -->
+                        <div class="bg-white rounded-lg shadow p-4 mb-6">
+                            <h4 class="text-lg font-medium mb-4">Ventes mensuelles</h4>
+                            <div id="salesChart" style="width: 100%; height: 300px;"></div>
+                        </div>
+                        
+                        <!-- Recent Orders -->
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="text-lg font-medium">Commandes récentes</h4>
+                                <a href="#" class="text-primary text-sm">Voir tout</a>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="text-left text-gray-500 text-sm">
+                                            <th class="pb-3 font-medium">Client</th>
+                                            <th class="pb-3 font-medium">Produits</th>
+                                            <th class="pb-3 font-medium">Montant</th>
+                                            <th class="pb-3 font-medium">Statut</th>
+                                            <th class="pb-3 font-medium">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-t border-gray-100">
+                                            <td class="py-3">Marie Lefevre</td>
+                                            <td class="py-3">Tomates, Courgettes, Aubergines</td>
+                                            <td class="py-3">42,50 €</td>
+                                            <td class="py-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">En préparation</span></td>
+                                            <td class="py-3">
+                                                <button class="text-primary hover:text-primary-dark">Détails</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-t border-gray-100">
+                                            <td class="py-3">Pierre Moreau</td>
+                                            <td class="py-3">Pommes, Poires</td>
+                                            <td class="py-3">18,75 €</td>
+                                            <td class="py-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">En livraison</span></td>
+                                            <td class="py-3">
+                                                <button class="text-primary hover:text-primary-dark">Détails</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-t border-gray-100">
+                                            <td class="py-3">Restaurant Le Terroir</td>
+                                            <td class="py-3">Carottes, Pommes de terre, Oignons</td>
+                                            <td class="py-3">87,20 €</td>
+                                            <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Livré</span></td>
+                                            <td class="py-3">
+                                                <button class="text-primary hover:text-primary-dark">Détails</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Interface Preview -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Interface client</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Une expérience d'achat simple et agréable pour les clients à la recherche de produits frais et locaux.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden p-6">
+                <!-- Search and Filters -->
+                <div class="mb-6">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="relative flex-1">
+                            <input type="text" placeholder="Rechercher des produits..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded focus:border-primary focus:ring-1 focus:ring-primary text-sm">
+                            <div class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+                                <i class="ri-search-line text-gray-400"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <div class="relative">
+                                <button class="flex items-center px-4 py-3 border border-gray-200 rounded hover:border-gray-300 text-sm whitespace-nowrap">
+                                    <i class="ri-filter-3-line mr-2"></i>
+                                    Filtrer
+                                </button>
+                            </div>
+                            
+                            <div class="relative">
+                                <button class="flex items-center px-4 py-3 border border-gray-200 rounded hover:border-gray-300 text-sm whitespace-nowrap">
+                                    <i class="ri-map-pin-line mr-2"></i>
+                                    À proximité
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Categories -->
+                <div class="mb-8">
+                    <div class="flex overflow-x-auto pb-2 gap-2">
+                        <button class="bg-primary text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">Tous les produits</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Fruits</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Légumes</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Produits laitiers</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Viandes</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Œufs</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Produits Bio</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Miel</button>
+                    </div>
+                </div>
+                
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Product Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20tomatoes%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20red%20color&width=300&height=200&seq=4&orientation=landscape" alt="Tomates" class="w-full h-48 object-cover object-top">
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Tomates Anciennes</h3>
+                                <div class="text-sm text-gray-500">500g</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-half-fill"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(24)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">3,50 €</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Durand - 5km</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape" alt="Carottes" class="w-full h-48 object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Carottes</h3>
+                                <div class="text-sm text-gray-500">1kg</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-line"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(18)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">2,20 €</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Legrand - 3km</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape" alt="Pommes" class="w-full h-48 object-cover object-top">
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Pommes Gala</h3>
+                                <div class="text-sm text-gray-500">2kg</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(36)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">4,80 €</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Verger Martin - 8km</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Card 4 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape" alt="Salade" class="w-full h-48 object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Salade Batavia</h3>
+                                <div class="text-sm text-gray-500">Pièce</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-half-fill"></i>
+                                    <i class="ri-star-line"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(12)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">1,50 €</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Dubois - 4km</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Floating Cart -->
+                <div class="fixed bottom-6 right-6 bg-white rounded-full shadow-lg p-3 z-10">
+                    <div class="relative">
+                        <button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+                            <i class="ri-shopping-cart-2-line ri-lg"></i>
+                        </button>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-primary/10">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Prêt à moderniser votre activité agricole ?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-8">Rejoignez notre plateforme et découvrez comment la technologie peut transformer votre exploitation agricole.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#" class="bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">Créer un compte producteur</a>
+                <a href="#" class="bg-white text-primary border border-primary px-8 py-3 !rounded-button hover:bg-gray-50 transition whitespace-nowrap">Découvrir l'application</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a href="#" class="text-2xl font-['Pacifico'] text-white mb-4 inline-block">Agritech</a>
+                    <p class="text-gray-400 mb-4">La technologie au service de l'agriculture. Connectons producteurs et consommateurs.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-facebook-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-twitter-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-instagram-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-linkedin-fill ri-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Accueil</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">À propos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Fonctionnalités</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Tarifs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Centre d'aide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Tutoriels</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Communauté</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support technique</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Recevez nos actualités et offres spéciales.</p>
+                    <form class="mb-4">
+                        <div class="flex">
+                            <input type="email" placeholder="Votre email" class="px-4 py-2 w-full text-gray-800 rounded-l border-none">
+                            <button type="submit" class="bg-primary text-white px-4 py-2 !rounded-r-button hover:bg-opacity-90 transition whitespace-nowrap">S'abonner</button>
+                        </div>
+                    </form>
+                    <div class="flex items-center">
+                        <label class="custom-switch mr-3">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="text-sm text-gray-400">J'accepte de recevoir des emails</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Agritech. Tous droits réservés.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Politique de confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Conditions d'utilisation</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Mentions légales</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sales Chart
+            var salesChartDom = document.getElementById('salesChart');
+            if (salesChartDom) {
+                var salesChart = echarts.init(salesChartDom);
+                var salesOption = {
+                    animation: false,
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        borderColor: '#eee',
+                        borderWidth: 1,
+                        textStyle: {
+                            color: '#1f2937'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        top: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                        axisLine: {
+                            lineStyle: {
+                                color: '#ddd'
+                            }
+                        },
+                        axisLabel: {
+                            color: '#1f2937'
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            color: '#1f2937'
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#eee'
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Ventes',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: 'rgba(87, 181, 231, 1)'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(87, 181, 231, 0.2)'
+                                    }, {
+                                        offset: 1, color: 'rgba(87, 181, 231, 0.05)'
+                                    }]
+                                }
+                            },
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            showSymbol: false,
+                            data: [1200, 1350, 1800, 2100, 1950, 2300, 2450, 2800, 3100, 3450, 3800, 4200]
+                        },
+                        {
+                            name: 'Commandes',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: 'rgba(141, 211, 199, 1)'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(141, 211, 199, 0.2)'
+                                    }, {
+                                        offset: 1, color: 'rgba(141, 211, 199, 0.05)'
+                                    }]
+                                }
+                            },
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            showSymbol: false,
+                            data: [50, 65, 85, 95, 90, 110, 120, 135, 150, 165, 180, 195]
+                        }
+                    ]
+                };
+                salesChart.setOption(salesOption);
+                
+                window.addEventListener('resize', function() {
+                    salesChart.resize();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
