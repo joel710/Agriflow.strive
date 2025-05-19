@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agritech - La technologie au service de l'agriculture</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#4CAF50', secondary: '#FF9800' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+    
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    
+        .hero-section {
+            background-image: url('https://readdy.ai/api/search-image?query=beautiful%20modern%20agriculture%20field%20with%20farmer%20using%20digital%20tablet%2C%20soft%20natural%20lighting%2C%20green%20crops%2C%20technology%20in%20farming%2C%20professional%20high-quality%20photo%20with%20blurred%20background%20on%20the%20left%20side%20for%20text%20placement%2C%20seamless%20transition%20from%20white%20to%20image&width=1920&height=800&seq=1&orientation=landscape');
+            background-size: cover;
+            background-position: center;
+        }
+    
+        input:focus {
+            outline: none;
+        }
+    
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+    
+        .custom-checkbox:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+    
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            top: 2px;
+            left: 6px;
+            transform: rotate(45deg);
+        }
+    
+        .custom-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+    
+        .custom-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+    
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+    
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+    
+        input:checked+.slider {
+            background-color: #4CAF50;
+        }
+    
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-2xl font-['Pacifico'] text-primary">AgriFlow</a>
+
+                <a href="index.html"
+                    class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accueil</a>
+                <a href="shop.html"
+                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">MarketPlace</a>
+                <a href="dash.html"
+                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Producteurs</a>
+                <a href="customerboard.html"
+                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clients</a>
+                <a href="#"
+                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Livraison</a>
+                <a href="#"
+                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">À
+                    propos</a>
+            </div>
+            <div class="flex items-center">
+                <div class="relative mr-4">
+                    <i class="ri-notification-3-line text-gray-600 ri-lg"></i>
+                    <span
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">2</span>
+                </div>
+                <div class="flex items-center">
+                    <img src="https://example.com/avatar.jpg" alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                    <span class="ml-2 text-gray-700">Jean Dupont</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="bg-gray-800 text-white w-64 min-h-screen p-4">
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center p-3 bg-primary/20 rounded">
+                    <i class="ri-dashboard-line mr-3"></i>Tableau de bord
+                </a>
+                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                    <i class="ri-shopping-cart-2-line mr-3"></i>Commandes
+                </a>
+                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                    <i class="ri-truck-line mr-3"></i>Livraisons
+                </a>
+                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                    <i class="ri-heart-line mr-3"></i>Favoris
+                </a>
+                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                    <i class="ri-file-list-2-line mr-3"></i>Factures
+                </a>
+                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                    <i class="ri-bar-chart-line mr-3"></i>Statistiques
+                </a>
+                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
+                    <i class="ri-settings-3-line mr-3"></i>Paramètres
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Vue d'ensemble des commandes -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-gray-500 text-sm mb-2">Commandes en cours</div>
+                    <div class="text-2xl font-bold text-primary">15</div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">5 en attente</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded ml-2">10 confirmées</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-gray-500 text-sm mb-2">Chiffre d'affaires</div>
+                    <div class="text-2xl font-bold text-primary">1 245 €</div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        <div>Aujourd'hui: 150 €</div>
+                        <div>Ce mois: 3 450 €</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-gray-500 text-sm mb-2">Livraisons en cours</div>
+                    <div class="text-2xl font-bold text-primary">3</div>
+                    <div class="text-xs text-green-600 mt-2">2 en route</div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-gray-500 text-sm mb-2">Panier actuel</div>
+                    <div class="text-2xl font-bold text-primary">54,30 €</div>
+                    <button class="text-xs text-white bg-primary px-2 py-1 rounded mt-2">Voir le panier</button>
+                </div>
+            </div>
+
+            <!-- Suivi des livraisons -->
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h3 class="text-lg font-semibold mb-4">🚚 Suivi des livraisons</h3>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                            <i class="ri-truck-line text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium">Livraison #1254</div>
+                            <div class="text-sm text-gray-500">En route - Livraison prévue à 15h30</div>
+                        </div>
+                    </div>
+                    <div class="text-sm">
+                        <div class="text-gray-500">Livreur: Jean Martin</div>
+                        <div class="text-primary">+33 6 12 34 56 78</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique des commandes -->
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">🛒 Historique des commandes</h3>
+                    <div class="flex gap-2">
+                        <input type="date" class="border rounded px-2 py-1 text-sm">
+                        <select class="border rounded px-2 py-1 text-sm">
+                            <option>Tous les statuts</option>
+                            <option>Livré</option>
+                            <option>En cours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-sm text-gray-500 border-b">
+                            <th class="pb-3">Date</th>
+                            <th class="pb-3">Produits</th>
+                            <th class="pb-3">Montant</th>
+                            <th class="pb-3">Statut</th>
+                            <th class="pb-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="py-3">15/06/2024</td>
+                            <td class="py-3">Tomates (5kg), Carottes (3kg)</td>
+                            <td class="py-3">45,60 FCFA</td>
+                            <td class="py-3"><span
+                                    class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Livré</span></td>
+                            <td class="py-3"><button class="text-primary hover:text-primary-dark">Détails</button></td>
+                        </tr>
+                        <!-- Plus de lignes... -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Statistiques et favoris -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Graphique des achats -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">📈 Statistiques d'achats</h3>
+                    <div id="purchaseChart" style="height: 300px;"></div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">🔍 Favoris</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center p-3 border rounded hover:bg-gray-50">
+                            <img src="tomates.jpg" class="w-12 h-12 rounded object-cover mr-3">
+                            <div>
+                                <div class="font-medium">Tomates Bio</div>
+                                <div class="text-sm text-gray-500">Ferme Durand</div>
+                            </div>
+                            <i class="ri-heart-fill text-red-500 ml-auto"></i>
+                        </div>
+                        <!-- Plus de favoris... -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panier flottant -->
+            <div class="fixed bottom-6 right-6 bg-white rounded-full shadow-lg p-3 z-10">
+                <div class="relative">
+                    <button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+                        <i class="ri-shopping-cart-2-line ri-lg"></i>
+                    </button>
+                    <span
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+        // Scripts pour les graphiques similaires à l'exemple
+    </script>
+</body>
+
+</html>
