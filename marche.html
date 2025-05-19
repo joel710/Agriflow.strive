@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agritech - La technologie au service de l'agriculture</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#4CAF50', secondary: '#FF9800' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hero-section {
+            background-image: url('https://readdy.ai/api/search-image?query=beautiful%20modern%20agriculture%20field%20with%20farmer%20using%20digital%20tablet%2C%20soft%20natural%20lighting%2C%20green%20crops%2C%20technology%20in%20farming%2C%20professional%20high-quality%20photo%20with%20blurred%20background%20on%20the%20left%20side%20for%20text%20placement%2C%20seamless%20transition%20from%20white%20to%20image&width=1920&height=800&seq=1&orientation=landscape');
+            background-size: cover;
+            background-position: center;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            top: 2px;
+            left: 6px;
+            transform: rotate(45deg);
+        }
+
+        .custom-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .custom-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-2xl font-['Pacifico'] text-primary">Agritech</a>
+                <nav class="hidden md:flex ml-10">
+                    <a href="index.html"
+                        class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accueil</a>
+                    <a href="shop.html"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">MarketPlace</a>
+                    <a href="dash.html"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Producteurs</a>
+                    <a href="customerboard.html"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clients</a>
+                    <a href="#"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Livraison</a>
+                    <a href="#"
+                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">À
+                        propos</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <a href="#"
+                    class="hidden md:inline-block px-4 py-2 text-gray-700 hover:text-primary mr-2 whitespace-nowrap">Se
+                    connecter</a>
+                <a href="#"
+                    class="bg-primary text-white px-5 py-2 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">S'inscrire</a>
+                <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <!-- <section class="hero-section relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent"></div>
+        <div class="container mx-auto px-4 py-20 md:py-32 relative">
+            <div class="w-full max-w-2xl">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">La technologie au service de l'agriculture
+                </h1>
+                <p class="text-lg md:text-xl text-gray-700 mb-8">Plateforme de gestion, de vente et de livraison pour
+                    les producteurs agricoles. Simplifiez votre activité et augmentez vos revenus.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#"
+                        class="bg-primary text-white px-6 py-3 !rounded-button hover:bg-opacity-90 transition text-center whitespace-nowrap">Je
+                        suis producteur</a>
+                    <a href="#"
+                        class="bg-white text-primary border border-primary px-6 py-3 !rounded-button hover:bg-gray-50 transition text-center whitespace-nowrap">Je
+                        suis client</a>
+                </div>
+            </div>
+        </div>
+    </section> -->
+    <!-- ############################################## -->
+    <!-- Ajouter cette section après le Hero Section existant -->
+    
+    <!-- ############################################### -->
+
+    
+
+    <!-- Client Interface Preview -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Notre Marketplace</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Plus de 1500 producteurs et 50 000 produits frais disponibles en direct
+                    de la ferme.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden p-6">
+                <!-- Search and Filters -->
+                <div class="mb-6">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="relative flex-1">
+                            <input type="text" placeholder="Rechercher des produits..."
+                                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded focus:border-primary focus:ring-1 focus:ring-primary text-sm">
+                            <div
+                                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+                                <i class="ri-search-line text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <div class="relative">
+                                <button
+                                    class="flex items-center px-4 py-3 border border-gray-200 rounded hover:border-gray-300 text-sm whitespace-nowrap">
+                                    <i class="ri-filter-3-line mr-2"></i>
+                                    Filtrer
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <button
+                                    class="flex items-center px-4 py-3 border border-gray-200 rounded hover:border-gray-300 text-sm whitespace-nowrap">
+                                    <i class="ri-map-pin-line mr-2"></i>
+                                    À proximité
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="mb-8">
+                    <div class="flex overflow-x-auto pb-2 gap-2">
+                        <button class="bg-primary text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">Tous les
+                            produits</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Fruits</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Légumes</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Produits
+                            laitiers</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Viandes</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Œufs</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Produits
+                            Bio</button>
+                        <button
+                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Miel</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Product Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20tomatoes%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20red%20color&width=300&height=200&seq=4&orientation=landscape"
+                                alt="Tomates" class="w-full h-48 object-cover object-top">
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Tomates Anciennes</h3>
+                                <div class="text-sm text-gray-500">500g</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-half-fill"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(24)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">3,50 FCFA</div>
+                                <button
+                                    class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Durand - 5km</div>
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- Product Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape"
+                                alt="Carottes" class="w-full h-48 object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Carottes</h3>
+                                <div class="text-sm text-gray-500">1kg</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-line"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(18)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">2,20 FCFA</div>
+                                <button
+                                    class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Legrand - 3km</div>
+                        </div>
+                    </div>
+
+                    
+                    <!-- Product Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape"
+                                alt="Pommes" class="w-full h-48 object-cover object-top">
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Pommes Gala</h3>
+                                <div class="text-sm text-gray-500">2kg</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(36)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">4,80 FCFA</div>
+                                <button
+                                    class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Verger Martin - 8km</div>
+                        </div>
+                    </div>
+
+
+                    <!-- Product Card 4 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape"
+                                alt="Salade" class="w-full h-48 object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Salade Batavia</h3>
+                                <div class="text-sm text-gray-500">Pièce</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-half-fill"></i>
+                                    <i class="ri-star-line"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(12)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">1,50 FCFA</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Dubois - 4km</div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20tomatoes%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20red%20color&width=300&height=200&seq=4&orientation=landscape"
+                                alt="Tomates" class="w-full h-48 object-cover object-top">
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Tomates Anciennes</h3>
+                                <div class="text-sm text-gray-500">500g</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-half-fill"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(24)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">3,50 FCFA</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Durand - 5km</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape"
+                                alt="Carottes" class="w-full h-48 object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Carottes</h3>
+                                <div class="text-sm text-gray-500">1kg</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-line"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(18)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">2,20 FCFA</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Legrand - 3km</div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape"
+                                alt="Pommes" class="w-full h-48 object-cover object-top">
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Pommes Gala</h3>
+                                <div class="text-sm text-gray-500">2kg</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(36)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">4,80 FCFA</div>
+                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Verger Martin - 8km</div>
+                        </div>
+                    </div>
+
+
+                    <!-- Product Card 4 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <div class="relative">
+                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape"
+                                alt="Salade" class="w-full h-48 object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium">Salade Batavia</h3>
+                                <div class="text-sm text-gray-500">Pièce</div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-half-fill"></i>
+                                    <i class="ri-star-line"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-1">(12)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-primary font-semibold">1,50 €</div>
+                                <button
+                                    class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
+                                    <i class="ri-shopping-cart-line"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Ferme Dubois - 4km</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Cart -->
+                <div class="fixed bottom-6 right-6 bg-white rounded-full shadow-lg p-3 z-10">
+                    <div class="relative">
+                        <button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+                            <i class="ri-shopping-cart-2-line ri-lg"></i>
+                        </button>
+                        <span
+                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-primary/10">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Prêt à moderniser votre activité agricole ?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-8">Rejoignez notre plateforme et découvrez comment la
+                technologie
+                peut transformer votre exploitation agricole.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="login.html"
+                    class="bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">Créer
+                    un compte producteur</a>
+                <a href="#"
+                    class="bg-white text-primary border border-primary px-8 py-3 !rounded-button hover:bg-gray-50 transition whitespace-nowrap">Découvrir
+                    l'application</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a href="#" class="text-2xl font-['Pacifico'] text-white mb-4 inline-block">Agritech</a>
+                    <p class="text-gray-400 mb-4">La technologie au service de l'agriculture. Connectons producteurs et
+                        consommateurs.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-facebook-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-twitter-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-instagram-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="ri-linkedin-fill ri-lg"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Accueil</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">À propos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Fonctionnalités</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Tarifs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Centre d'aide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Tutoriels</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Communauté</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support technique</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Recevez nos actualités et offres spéciales.</p>
+                    <form class="mb-4">
+                        <div class="flex">
+                            <input type="email" placeholder="Votre email"
+                                class="px-4 py-2 w-full text-gray-800 rounded-l border-none">
+                            <button type="submit"
+                                class="bg-primary text-white px-4 py-2 !rounded-r-button hover:bg-opacity-90 transition whitespace-nowrap">S'abonner</button>
+                        </div>
+                    </form>
+                    <div class="flex items-center">
+                        <label class="custom-switch mr-3">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="text-sm text-gray-400">J'accepte de recevoir des emails</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Agritech. Tous droits réservés.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Politique de
+                        confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Conditions d'utilisation</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Mentions légales</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sales Chart
+            var salesChartDom = document.getElementById('salesChart');
+            if (salesChartDom) {
+                var salesChart = echarts.init(salesChartDom);
+                var salesOption = {
+                    animation: false,
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        borderColor: '#eee',
+                        borderWidth: 1,
+                        textStyle: {
+                            color: '#1f2937'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        top: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                        axisLine: {
+                            lineStyle: {
+                                color: '#ddd'
+                            }
+                        },
+                        axisLabel: {
+                            color: '#1f2937'
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            color: '#1f2937'
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#eee'
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Ventes',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: 'rgba(87, 181, 231, 1)'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(87, 181, 231, 0.2)'
+                                    }, {
+                                        offset: 1, color: 'rgba(87, 181, 231, 0.05)'
+                                    }]
+                                }
+                            },
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            showSymbol: false,
+                            data: [1200, 1350, 1800, 2100, 1950, 2300, 2450, 2800, 3100, 3450, 3800, 4200]
+                        },
+                        {
+                            name: 'Commandes',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: 'rgba(141, 211, 199, 1)'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(141, 211, 199, 0.2)'
+                                    }, {
+                                        offset: 1, color: 'rgba(141, 211, 199, 0.05)'
+                                    }]
+                                }
+                            },
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            showSymbol: false,
+                            data: [50, 65, 85, 95, 90, 110, 120, 135, 150, 165, 180, 195]
+                        }
+                    ]
+                };
+                salesChart.setOption(salesOption);
+
+                window.addEventListener('resize', function () {
+                    salesChart.resize();
+                });
+            }
+        });
+        // Scripts pour les graphiques
+        document.addEventListener('DOMContentLoaded', function () {
+            // Graphique des ventes
+            const salesChart = echarts.init(document.getElementById('sales-chart'));
+            salesChart.setOption({
+                xAxis: { type: 'category', data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'] },
+                yAxis: { type: 'value' },
+                series: [{
+                    data: [1200, 2000, 1500, 3000, 2500, 4000],
+                    type: 'line',
+                    smooth: true,
+                    color: '#4CAF50'
+                }]
+            });
+
+            // Graphique circulaire
+            const productsChart = echarts.init(document.getElementById('products-chart'));
+            productsChart.setOption({
+                tooltip: { trigger: 'item' },
+                series: [{
+                    type: 'pie',
+                    radius: '70%',
+                    data: [
+                        { value: 35, name: 'Légumes' },
+                        { value: 25, name: 'Fruits' },
+                        { value: 20, name: 'Produits laitiers' },
+                        { value: 20, name: 'Autres' }
+                    ],
+                    color: ['#4CAF50', '#FF9800', '#8BC34A', '#CDDC39']
+                }]
+            });
+
+            // Gestion du formulaire produit
+            document.querySelector('button').addEventListener('click', () => {
+                document.getElementById('product-form').classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+
+</html>
