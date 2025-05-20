@@ -30,16 +30,21 @@ document.addEventListener('DOMContentLoaded', function () {
             userProfile.classList.remove('hidden');
             userEmail.textContent = user.email;
 
-            // Afficher/masquer les éléments en fonction du rôle
-            const producerElements = document.querySelectorAll('.producer-only');
-            const clientElements = document.querySelectorAll('.client-only');
+            // Gérer la redirection du tableau de bord en fonction du rôle
+            const dashboardLink = document.getElementById('dashboard-link');
+            if (dashboardLink) {
+                dashboardLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (user && user.role) {
+                        const dashboardUrl = user.role === 'producteur' ? '/agriflow/tableau-producteur.html' : '/agriflow/tableau-client.html';
+                        console.log('Redirection vers:', dashboardUrl);
+                        window.location.replace(dashboardUrl);
+                    } else {
+                        window.location.replace('/agriflow/login.html');
+                    }
 
-            if (user.role === 'producteur') {
-                producerElements.forEach(el => el.style.display = 'block');
-                clientElements.forEach(el => el.style.display = 'none');
-            } else if (user.role === 'client') {
-                producerElements.forEach(el => el.style.display = 'none');
-                clientElements.forEach(el => el.style.display = 'block');
+                });
             }
         } else {
             authButtons.classList.remove('hidden');
@@ -51,10 +56,20 @@ document.addEventListener('DOMContentLoaded', function () {
     checkAuthState();
 
     // Gérer la déconnexion
-    window.logout = function () {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        checkAuthState();
-        window.location.href = 'accueil.html';
+    window.logout = async function () {
+        try {
+            await fetch('/agriflow/auth/process.php?action=logout');
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            checkAuthState();
+            window.location.replace('/agriflow/accueil.html');
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion:', error);
+            // On déconnecte quand même localement en cas d'erreur
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            checkAuthState();
+            window.location.replace('/agriflow/accueil.html');
+        }
     };
 });

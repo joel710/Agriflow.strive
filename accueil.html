@@ -7,6 +7,28 @@
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>tailwind.config={theme:{extend:{colors:{primary:'#4CAF50',secondary:'#FF9800'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
     <script src="js/profile-menu.js"></script>
+    <script>
+        function toggleCart() {
+            const cartSidebar = document.getElementById('cart-sidebar');
+            if (cartSidebar) {
+                if (cartSidebar.classList.contains('translate-x-full')) {
+                    cartSidebar.classList.remove('translate-x-full');
+                } else {
+                    cartSidebar.classList.add('translate-x-full');
+                }
+            }
+        }
+
+        // Fermer le panier en cliquant à l'extérieur
+        document.addEventListener('click', function(event) {
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartButton = document.querySelector('[onclick="toggleCart()"]');
+            
+            if (cartSidebar && !cartSidebar.contains(event.target) && !cartButton.contains(event.target)) {
+                cartSidebar.classList.add('translate-x-full');
+            }
+        });
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -93,6 +115,7 @@
     </style>
 </head>
 <body class="bg-gray-50">
+
     <!-- Navbar -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -120,9 +143,8 @@
                         <i class="ri-arrow-down-s-line"></i>
                     </button>
                     <div class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5" id="profile-dropdown">
-                        <a href="tableau-producteur.html" class="producer-only block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon tableau de bord</a>
-                        <a href="tableau-client.html" class="client-only block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon tableau de bord</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon panier</a>
+                        <a href="" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon tableau de bord</a>
+                        <a href="#" onclick="toggleCart(); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon panier</a>
                         <button onclick="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</button>
                     </div>
                 </div>
@@ -279,7 +301,7 @@
                                 <span class="text-xs text-gray-500 ml-1">(24)</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">3,50 €</div>
+                                <div class="text-primary font-semibold">3 000 FCFA</div>
                                 <button
                                     class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
                                     <i class="ri-shopping-cart-line"></i>
@@ -311,7 +333,7 @@
                                 <span class="text-xs text-gray-500 ml-1">(18)</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">2,20 €</div>
+                                <div class="text-primary font-semibold">2 000 FCFA</div>
                                 <button
                                     class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
                                     <i class="ri-shopping-cart-line"></i>
@@ -343,7 +365,7 @@
                                 <span class="text-xs text-gray-500 ml-1">(24)</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">3,50 €</div>
+                                <div class="text-primary font-semibold">3 000 FCFA</div>
                                 <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
                                     <i class="ri-shopping-cart-line"></i>
                                 </button>
@@ -375,7 +397,7 @@
                                 <span class="text-xs text-gray-500 ml-1">(36)</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">4,80 €</div>
+                                <div class="text-primary font-semibold">3 000 FCFA</div>
                                 <button
                                     class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
                                     <i class="ri-shopping-cart-line"></i>
@@ -407,7 +429,7 @@
                                 <span class="text-xs text-gray-500 ml-1">(12)</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">1,50 €</div>
+                                <div class="text-primary font-semibold">1 000 FCFA</div>
                                 <button
                                     class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
                                     <i class="ri-shopping-cart-line"></i>
@@ -417,114 +439,11 @@
                         </div>
                     </div>
 
-                    <!-- Product Card 2 -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape"
-                                alt="Carottes" class="w-full h-48 object-cover object-top">
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-medium">Carottes</h3>
-                                <div class="text-sm text-gray-500">1kg</div>
-                            </div>
-                            <div class="flex items-center mb-3">
-                                <div class="flex text-yellow-400 text-sm">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-line"></i>
-                                </div>
-                                <span class="text-xs text-gray-500 ml-1">(18)</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">2,20 €</div>
-                                <button class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
-                                    <i class="ri-shopping-cart-line"></i>
-                                </button>
-                            </div>
-                            <div class="mt-2 text-xs text-gray-500">Ferme Legrand - 3km</div>
-                        </div>
-                    </div>
 
-                     <!-- Product Card 3 -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape"
-                                alt="Pommes" class="w-full h-48 object-cover object-top">
-                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Bio</div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-medium">Pommes Gala</h3>
-                                <div class="text-sm text-gray-500">2kg</div>
-                            </div>
-                            <div class="flex items-center mb-3">
-                                <div class="flex text-yellow-400 text-sm">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <span class="text-xs text-gray-500 ml-1">(36)</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">4,80 €</div>
-                                <button
-                                    class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
-                                    <i class="ri-shopping-cart-line"></i>
-                                </button>
-                            </div>
-                            <div class="mt-2 text-xs text-gray-500">Verger Martin - 8km</div>
-                        </div>
-                    </div>
-    
-                    <!-- Product Card 4 -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape"
-                                alt="Salade" class="w-full h-48 object-cover object-top">
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-medium">Salade Batavia</h3>
-                                <div class="text-sm text-gray-500">Pièce</div>
-                            </div>
-                            <div class="flex items-center mb-3">
-                                <div class="flex text-yellow-400 text-sm">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-half-fill"></i>
-                                    <i class="ri-star-line"></i>
-                                </div>
-                                <span class="text-xs text-gray-500 ml-1">(12)</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <div class="text-primary font-semibold">1,50 €</div>
-                                <button
-                                    class="bg-primary text-white p-2 rounded !rounded-button hover:bg-opacity-90 transition">
-                                    <i class="ri-shopping-cart-line"></i>
-                                </button>
-                            </div>
-                            <div class="mt-2 text-xs text-gray-500">Ferme Dubois - 4km</div>
-                        </div>
-                    </div>
 
                 </div>
     
-                <!-- Floating Cart -->
-                <div class="fixed bottom-6 right-6 bg-white rounded-full shadow-lg p-3 z-10">
-                    <div class="relative">
-                        <button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
-                            <i class="ri-shopping-cart-2-line ri-lg"></i>
-                        </button>
-                        <span
-                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                    </div>
-                </div>
+
             </div>
         </div>
     </section>
@@ -844,6 +763,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+                const auth = await fetch('/agriflow/auth/process.php?action=check_auth');
+                const data = await auth.json();
+
+                if (data.authenticated) {
+                    document.getElementById('auth-buttons').classList.add('hidden');
+                    document.getElementById('user-profile').classList.remove('hidden');
+                }
+            });
         document.addEventListener('DOMContentLoaded', function() {
             // Sales Chart
             var salesChartDom = document.getElementById('salesChart');
@@ -961,5 +889,42 @@
             }
         });
     </script>
+    <!-- Floating Cart Button -->
+    <button onclick="toggleCart()" class="fixed bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary/90 transition z-50 flex items-center justify-center">
+         <i class="ri-shopping-cart-line ri-lg"></i>
+         <span class="ml-2 font-medium" id="cart-count">00</span>
+     </button>
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-96 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="h-full flex flex-col">
+            <!-- Cart Header -->
+            <div class="bg-primary text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Mon Panier</h2>
+                <button onclick="toggleCart()" class="text-white hover:text-gray-200">
+                    <i class="ri-close-line ri-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Cart Items -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <!-- Empty cart message -->
+                <div class="text-center text-gray-500 py-8">
+                    <i class="ri-shopping-cart-line ri-3x mb-4"></i>
+                    <p>Votre panier est vide</p>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="border-t p-4 bg-gray-50">
+                <div class="flex justify-between mb-4">
+                    <span class="font-medium">Total</span>
+                    <span class="font-semibold">0 FCFA</span>
+                </div>
+                <button class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Commander
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

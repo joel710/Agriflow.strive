@@ -1,11 +1,14 @@
 // Protection des pages avec vérification du rôle
 async function protectPage() {
     try {
-        const response = await fetch('/auth/process.php?action=check_auth');
-        const data = await response.json();
+        const response = await fetch('/agriflow/auth/process.php?action=check_auth');
+        console.log('Réponse brute:', response);
+        const responseText = await response.text();
+        console.log('Texte de la réponse:', responseText);
+        const data = JSON.parse(responseText);
 
         if (!data.authenticated) {
-            window.location.href = '/login.html';
+            window.location.href = '/agriflow/login.html';
             return;
         }
 
@@ -13,12 +16,12 @@ async function protectPage() {
         const currentPage = window.location.pathname;
 
         if (currentPage.includes('tableau-producteur.html') && data.role !== 'producteur') {
-            window.location.href = '/login.html';
+            window.location.href = '/agriflow/login.html';
             return;
         }
 
         if (currentPage.includes('tableau-client.html') && data.role !== 'client') {
-            window.location.href = '/login.html';
+            window.location.href = '/agriflow/login.html';
             return;
         }
 
@@ -40,15 +43,15 @@ async function protectPage() {
 
     } catch (error) {
         console.error('Erreur de vérification d\'authentification:', error);
-        window.location.href = '/login.html';
+        window.location.href = '/agriflow/login.html';
     }
 }
 
 // Fonction de déconnexion
 async function logout() {
     try {
-        await fetch('/auth/process.php?action=logout');
-        window.location.href = '/index.html';
+        await fetch('/agriflow/auth/process.php?action=logout');
+        window.location.href = '/agriflow/index.html';
     } catch (error) {
         console.error('Erreur lors de la déconnexion:', error);
     }
