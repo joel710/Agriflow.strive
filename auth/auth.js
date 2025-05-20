@@ -14,7 +14,7 @@ async function checkAuth() {
 async function protectPage(allowedRole) {
     const auth = await checkAuth();
     if (!auth.authenticated || (allowedRole && auth.role !== allowedRole)) {
-        window.location.href = '/login.html';
+        window.location.href = '/agriflow/login.html';
     }
 }
 
@@ -32,13 +32,34 @@ function handleLogin(event) {
         body: formData
     })
         .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
+            console.log('Réponse brute:', response);
+            return response.text().then(text => {
+                console.log('Texte de la réponse:', text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Erreur de parsing JSON:', e);
+                    throw new Error('Réponse invalide du serveur');
+                }
+            });
+        })
+        .then(data => {
+            console.log('Données parsées:', data);
+            if (data.success && data.user) {
+                console.log('Connexion réussie:', data);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.replace('/agriflow/accueil.html');
+            } else if (data.errors) {
+                console.error('Erreurs de connexion:', data.errors);
+                showError(data.errors.join(', '));
+            } else {
+                console.error('Réponse inattendue:', data);
+                showError('Une erreur inattendue est survenue');
             }
         })
         .catch(error => {
             console.error('Erreur de connexion:', error);
-            showError('Une erreur est survenue lors de la connexion');
+            showError(error.message || 'Une erreur est survenue lors de la connexion');
         });
 }
 
@@ -61,7 +82,7 @@ function handleRegister(event) {
     })
         .then(response => {
             if (response.redirected) {
-                window.location.href = response.url;
+                window.location.href = '/agriflow/accueil.html';
             }
         })
         .catch(error => {

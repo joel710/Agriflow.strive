@@ -114,26 +114,17 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
                 <a href="#" class="text-2xl font-['Pacifico'] text-primary">AgriFlow</a>
-
-                <a href="index.html"
-                    class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accueil</a>
-                <a href="shop.html"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">MarketPlace</a>
-                <a href="dash.html"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Producteurs</a>
-                <a href="customerboard.html"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clients</a>
-                <a href="#"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Livraison</a>
-                <a href="#"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">À
-                    propos</a>
+                <a href="index.html" class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accueil</a>
+                <a href="shop.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">MarketPlace</a>
+                <a href="dash.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Producteurs</a>
+                <a href="customerboard.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clients</a>
+                <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Livraison</a>
+                <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">À propos</a>
             </div>
             <div class="flex items-center">
                 <div class="relative mr-4">
                     <i class="ri-notification-3-line text-gray-600 ri-lg"></i>
-                    <span
-                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">2</span>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">2</span>
                 </div>
                 <div class="flex items-center">
                     <img src="https://example.com/avatar.jpg" alt="Profile" class="w-8 h-8 rounded-full object-cover">
@@ -147,27 +138,12 @@
         <!-- Sidebar -->
         <aside class="bg-gray-800 text-white w-64 min-h-screen p-4">
             <nav class="space-y-2">
-                <a href="#" class="flex items-center p-3 bg-primary/20 rounded">
-                    <i class="ri-dashboard-line mr-3"></i>Tableau de bord
-                </a>
-                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                    <i class="ri-shopping-cart-2-line mr-3"></i>Commandes
-                </a>
-                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                    <i class="ri-truck-line mr-3"></i>Livraisons
-                </a>
-                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                    <i class="ri-heart-line mr-3"></i>Favoris
-                </a>
-                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                    <i class="ri-file-list-2-line mr-3"></i>Factures
-                </a>
-                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                    <i class="ri-bar-chart-line mr-3"></i>Statistiques
-                </a>
-                <a href="#" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                    <i class="ri-settings-3-line mr-3"></i>Paramètres
-                </a>
+                <button class="flex items-center p-3 w-full text-left hover:bg-gray-700 rounded tab-btn" data-tab="dashboard"><i class="ri-dashboard-line mr-3"></i>Tableau de bord</button>
+                <button class="flex items-center p-3 w-full text-left hover:bg-gray-700 rounded tab-btn" data-tab="orders"><i class="ri-shopping-cart-2-line mr-3"></i>Commandes</button>
+                <button class="flex items-center p-3 w-full text-left hover:bg-gray-700 rounded tab-btn" data-tab="deliveries"><i class="ri-truck-line mr-3"></i>Livraisons</button>
+                <button class="flex items-center p-3 w-full text-left hover:bg-gray-700 rounded tab-btn" data-tab="favorites"><i class="ri-heart-line mr-3"></i>Favoris</button>
+                <button class="flex items-center p-3 w-full text-left hover:bg-gray-700 rounded tab-btn" data-tab="invoices"><i class="ri-file-list-2-line mr-3"></i>Factures</button>
+                <button class="flex items-center p-3 w-full text-left hover:bg-gray-700 rounded tab-btn" data-tab="settings"><i class="ri-settings-3-line mr-3"></i>Paramètres</button>
             </nav>
         </aside>
 
