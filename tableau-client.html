@@ -130,10 +130,16 @@
                     <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">2</span>
                 </div>
                 <div class="relative" id="user-profile">
-                    <button type="button" class="flex items-center space-x-2 text-gray-700 hover:text-primary transition" id="profile-menu-button" aria-expanded="false">
-                        <img src="https://example.com/avatar.jpg" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                        <span class="ml-2 text-gray-700">Jean Dupont</span>
-                        <i class="ri-arrow-down-s-line"></i>
+                    <button type="button" class="flex items-center space-x-3 text-gray-700 hover:text-primary transition" id="profile-menu-button" aria-expanded="false">
+                        <div class="relative flex items-center">
+                            <img src="https://example.com/avatar.jpg" alt="Profile" class="w-8 h-8 rounded-full object-cover border-2 border-primary">
+                            <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                        </div>
+                        <!-- <div class="flex flex-col items-start">
+                            <span class="text-sm font-medium text-gray-900">Jean DUPONT</span>
+                            <span class="text-xs text-gray-500">Profil</span>
+                        </div> -->
+                        <!-- <i class="ri-arrow-down-s-line ml-1"></i> -->
                     </button>
                     <div class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5" id="profile-dropdown">
                         <a href="" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon tableau de bord</a>
@@ -163,8 +169,10 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-8">
-            <!-- Vue d'ensemble des commandes -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content">
+                <!-- Vue d'ensemble des commandes -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white p-4 rounded-lg shadow">
                     <div class="text-gray-500 text-sm mb-2">Commandes en cours</div>
                     <div class="text-2xl font-bold text-primary">15</div>
@@ -196,8 +204,8 @@
                 </div>
             </div>
 
-            <!-- Suivi des livraisons -->
-            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <!-- Suivi des livraisons -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
                 <h3 class="text-lg font-semibold mb-4">🚚 Suivi des livraisons</h3>
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
                     <div class="flex items-center">
@@ -216,8 +224,12 @@
                 </div>
             </div>
 
-            <!-- Historique des commandes -->
-            <div class="bg-white rounded-lg shadow p-6 mb-8">
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders-tab" class="tab-content hidden">
+                <!-- Historique des commandes -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">🛒 Historique des commandes</h3>
                     <div class="flex gap-2">
@@ -252,6 +264,111 @@
                         <!-- Plus de lignes... -->
                     </tbody>
                 </table>
+            </div>
+
+            </div>
+
+            <!-- Deliveries Tab -->
+            <div id="deliveries-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h3 class="text-lg font-semibold mb-4">🚚 Suivi des livraisons en cours</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                                    <i class="ri-truck-line text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Livraison #1254</div>
+                                    <div class="text-sm text-gray-500">En route - Livraison prévue à 15h30</div>
+                                </div>
+                            </div>
+                            <div class="text-sm">
+                                <div class="text-gray-500">Livreur: Jean Martin</div>
+                                <div class="text-primary">+33 6 12 34 56 78</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div id="favorites-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">🔍 Mes Favoris</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="flex items-center p-3 border rounded hover:bg-gray-50">
+                            <img src="tomates.jpg" class="w-12 h-12 rounded object-cover mr-3">
+                            <div>
+                                <div class="font-medium">Tomates Bio</div>
+                                <div class="text-sm text-gray-500">Ferme Durand</div>
+                            </div>
+                            <i class="ri-heart-fill text-red-500 ml-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoices Tab -->
+            <div id="invoices-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">📄 Mes Factures</h3>
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-sm text-gray-500 border-b">
+                                <th class="pb-3">N° Facture</th>
+                                <th class="pb-3">Date</th>
+                                <th class="pb-3">Montant</th>
+                                <th class="pb-3">Statut</th>
+                                <th class="pb-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-3">FAC-2024-001</td>
+                                <td class="py-3">15/06/2024</td>
+                                <td class="py-3">45,60 FCFA</td>
+                                <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Payée</span></td>
+                                <td class="py-3"><button class="text-primary hover:text-primary-dark">Télécharger</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">⚙️ Paramètres</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-medium mb-2">Informations personnelles</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Nom</label>
+                                    <input type="text" class="w-full border rounded px-3 py-2" value="DUPONT">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Prénom</label>
+                                    <input type="text" class="w-full border rounded px-3 py-2" value="Jean">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Notifications</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="custom-checkbox mr-2" checked>
+                                    <span>Notifications par email</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="custom-checkbox mr-2" checked>
+                                    <span>Notifications push</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Statistiques et favoris -->
@@ -294,7 +411,68 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <script>
-        // Scripts pour les graphiques similaires à l'exemple
+        // Gestion des onglets
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            function showTab(tabId) {
+                // Cacher tous les contenus
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                // Afficher le contenu sélectionné
+                const selectedContent = document.getElementById(tabId + '-tab');
+                if (selectedContent) {
+                    selectedContent.classList.remove('hidden');
+                }
+
+                // Mettre à jour les styles des boutons
+                tabButtons.forEach(btn => {
+                    if (btn.dataset.tab === tabId) {
+                        btn.classList.add('bg-primary', 'text-white');
+                        btn.classList.remove('hover:bg-gray-700');
+                    } else {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('hover:bg-gray-700');
+                    }
+                });
+            }
+
+            // Ajouter les écouteurs d'événements aux boutons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Afficher l'onglet dashboard par défaut
+            showTab('dashboard');
+        });
+
+        // Scripts pour les graphiques
+        const chartDom = document.getElementById('purchaseChart');
+        const myChart = echarts.init(chartDom);
+        const option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [150, 230, 224, 218, 135, 147],
+                type: 'line',
+                smooth: true
+            }]
+        };
+        myChart.setOption(option);
     </script>
 </body>
 
