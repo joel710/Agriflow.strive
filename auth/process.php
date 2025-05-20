@@ -1,4 +1,12 @@
 <?php
+ob_start();
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if (isset($_GET['action']) && $_GET['action'] === 'check_auth') {
+    ob_clean();
+}
 require_once 'auth.php';
 
 // Initialisation de la classe Auth
@@ -6,22 +14,19 @@ $auth = new Auth();
 
 // Traitement de la connexion
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
+    header('Content-Type: application/json');
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'] ?? '';
 
     if ($auth->login($email, $password)) {
-        // Redirection selon le rôle
-        $role = $_SESSION['role'];
-        if ($role === 'producteur') {
-            header('Location: ../tableau-producteur.html');
-        } else {
-            header('Location: ../tableau-client.html');
-        }
+        // La réponse JSON est déjà envoyée par la méthode login
         exit;
     } else {
         $errors = $auth->getErrors();
-        // Redirection avec erreurs
-        header('Location: ../login.html?error=' . urlencode(implode(', ', $errors)));
+        echo json_encode([
+            'success' => false,
+            'errors' => $errors
+        ]);
         exit;
     }
 }
@@ -86,12 +91,23 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 // Protection des pages
 if (isset($_GET['action']) && $_GET['action'] === 'check_auth') {
+    header('Content-Type: application/json');
+
     if (!$auth->checkSession()) {
+        error_log('Session non valide');
         http_response_code(401);
-        echo json_encode(['authenticated' => false]);
+        ob_end_flush();
+        echo json_encode(['authenticated' => false, 'error' => 'Session invalide']);
         exit;
     }
-    echo json_encode(['authenticated' => true, 'role' => $_SESSION['role']]);
+
+    error_log('Session valide - Role: ' . $_SESSION['role']);
+    ob_end_flush();
+    echo json_encode([
+        'authenticated' => true,
+        'role' => $_SESSION['role'],
+        'user_id' => $_SESSION['user_id'],
+        'token' => $_SESSION['token']
+    ]);
     exit;
 }
-?>
