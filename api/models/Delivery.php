@@ -7,6 +7,7 @@ class Delivery
     // Propriétés
     public $id;
     public $order_id;
+    public $customer_id;
     public $status;
     public $tracking_number;
     public $estimated_delivery_date;
@@ -14,12 +15,19 @@ class Delivery
     public $delivery_person_name;
     public $delivery_person_phone;
     public $delivery_notes;
+    public $delivery_address; // Ajout de la propriété delivery_address
     public $created_at;
     public $updated_at;
 
     public function __construct($db)
     {
         $this->conn = $db;
+    }
+
+    // Définir l'ID du client
+    public function setCustomerId($customer_id)
+    {
+        $this->customer_id = htmlspecialchars(strip_tags($customer_id));
     }
 
     // Créer une nouvelle livraison

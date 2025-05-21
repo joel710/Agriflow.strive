@@ -16,6 +16,13 @@ class Order
     public $created_at;
     public $updated_at;
 
+    // Propriétés de livraison
+    public $delivery_status;
+    public $estimated_delivery_date;
+    public $tracking_number;
+    public $delivery_person_name;
+    public $delivery_person_phone;
+
     public function __construct($db)
     {
         $this->conn = $db;

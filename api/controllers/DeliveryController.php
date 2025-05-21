@@ -1,5 +1,5 @@
 <?php
-require_once '../config/Database.php';
+require_once '../config/database.php';
 require_once '../config/ApiResponse.php';
 require_once '../models/Delivery.php';
 
@@ -38,7 +38,7 @@ class DeliveryController
                     'delivery_person_name' => $this->delivery->delivery_person_name,
                     'delivery_person_phone' => $this->delivery->delivery_person_phone,
                     'delivery_notes' => $this->delivery->delivery_notes,
-                    'delivery_address' => $this->delivery->delivery_address,
+                    'delivery_address' => isset($this->delivery->delivery_address) ? $this->delivery->delivery_address : null,
                     'created_at' => $this->delivery->created_at,
                     'updated_at' => $this->delivery->updated_at
                 ];
