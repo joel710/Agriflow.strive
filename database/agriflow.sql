@@ -1,4 +1,151 @@
--- Création de la base de données avec encodage et collation appropriés
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS agriflow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE agriflow;
+
+-- Table des produits
+CREATE TABLE IF NOT EXISTS products (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    producer_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    unit VARCHAR(50) NOT NULL,
+    stock_quantity INT NOT NULL DEFAULT 0,
+    image_url VARCHAR(255),
+    is_bio BOOLEAN DEFAULT FALSE,
+    is_available BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_producer (producer_id),
+    INDEX idx_availability (is_available)
+) ENGINE=InnoDB;
+
+-- Table des favoris
+CREATE TABLE IF NOT EXISTS favorites (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_favorite (customer_id, product_id),
+    INDEX idx_customer (customer_id),
+    INDEX idx_product (product_id)
+) ENGINE=InnoDB;
+
+-- Table des commandes
+CREATE TABLE IF NOT EXISTS orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    status ENUM('en_attente', 'confirmee', 'en_preparation', 'en_livraison', 'livree', 'annulee') NOT NULL DEFAULT 'en_attente',
+    payment_status ENUM('en_attente', 'payee', 'remboursee', 'echec') NOT NULL DEFAULT 'en_attente',
+    payment_method VARCHAR(50),
+    delivery_address TEXT NOT NULL,
+    delivery_notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_customer (customer_id),
+    INDEX idx_status (status),
+    INDEX idx_payment_status (payment_status)
+) ENGINE=InnoDB;
+
+-- Table des items de commande
+CREATE TABLE IF NOT EXISTS order_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_order (order_id),
+    INDEX idx_product (product_id)
+) ENGINE=InnoDB;
+
+-- Table des livraisons
+CREATE TABLE IF NOT EXISTS deliveries (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL UNIQUE,
+    status ENUM('en_attente', 'en_preparation', 'en_cours', 'livree', 'annulee') NOT NULL DEFAULT 'en_attente',
+    tracking_number VARCHAR(100),
+    estimated_delivery_date DATETIME,
+    actual_delivery_date DATETIME,
+    delivery_person_name VARCHAR(255),
+    delivery_person_phone VARCHAR(20),
+    delivery_notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_order (order_id),
+    INDEX idx_status (status)
+) ENGINE=InnoDB;
+
+-- Table des factures
+CREATE TABLE IF NOT EXISTS invoices (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL UNIQUE,
+    invoice_number VARCHAR(50) NOT NULL UNIQUE,
+    amount DECIMAL(10, 2) NOT NULL,
+    status ENUM('en_attente', 'payee', 'annulee') NOT NULL DEFAULT 'en_attente',
+    payment_date DATETIME,
+    pdf_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_order (order_id),
+    INDEX idx_status (status)
+) ENGINE=InnoDB;
+
+-- Table des notifications
+CREATE TABLE IF NOT EXISTS notifications (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    type ENUM('commande', 'livraison', 'paiement', 'system') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    related_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user (user_id),
+    INDEX idx_type (type),
+    INDEX idx_read (is_read)
+) ENGINE=InnoDB;
+
+-- Table des paramètres utilisateur
+CREATE TABLE IF NOT EXISTS user_settings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL UNIQUE,
+    notification_email BOOLEAN DEFAULT TRUE,
+    notification_sms BOOLEAN DEFAULT FALSE,
+    notification_push BOOLEAN DEFAULT TRUE,
+    language VARCHAR(10) DEFAULT 'fr',
+    theme VARCHAR(20) DEFAULT 'light',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_user (user_id)
+) ENGINE=InnoDB;
+
+-- Contraintes de clé étrangère
+ALTER TABLE favorites
+    ADD CONSTRAINT fk_favorites_customer FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_favorites_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE;
+
+ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE CASCADE;
+
+ALTER TABLE order_items
+    ADD CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_order_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE;
+
+ALTER TABLE deliveries
+    ADD CONSTRAINT fk_deliveries_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE;
+
+ALTER TABLE invoices
+    ADD CONSTRAINT fk_invoices_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE;
+
+ALTER TABLE notifications
+    ADD CONSTRAINT fk_notifications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+ALTER TABLE user_settings
+    ADD CONSTRAINT fk_user_settings_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE; avec encodage et collation appropriés
 CREATE DATABASE IF NOT EXISTS agriflow 
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
