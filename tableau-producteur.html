@@ -754,6 +754,7 @@
             // Gestion des onglets
             const tabs = document.querySelectorAll('.nav-tab');
             const contents = document.querySelectorAll('.tab-content');
+
             function activateTab(targetId) {
                 contents.forEach(content => content.classList.remove('active'));
                 tabs.forEach(tab => tab.classList.remove('active-tab', 'bg-primary/20'));
@@ -762,6 +763,7 @@
                 const activeTab = document.querySelector(`.nav-tab[data-target="${targetId}"]`);
                 if (activeTab) activeTab.classList.add('active-tab', 'bg-primary/20');
             }
+
             tabs.forEach(tab => {
                 tab.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -769,7 +771,14 @@
                     activateTab(targetId);
                 });
             });
-            activateTab('dashboard');
+
+            // Activation de l'onglet initial (corrigé)
+            const initialTab = document.querySelector('.nav-tab.active-tab');
+            if (initialTab) {
+                activateTab(initialTab.dataset.target);
+            } else if (tabs.length > 0) {
+                activateTab(tabs[0].dataset.target);
+            }
 
             // Gestion du formulaire produit (affichage/masquage)
             const addProductBtn = document.querySelector('#mes-produits button');
@@ -781,8 +790,8 @@
             }
 
             // Initialisation des graphiques ECharts
-            // Ventes mensuelles (dashboard)
-            var salesChartDom = document.getElementById('salesChart');
+            // Ventes mensuelles (dashboard) - CORRECTION ID: 'sales-chart'
+            var salesChartDom = document.getElementById('sales-chart');
             if (salesChartDom) {
                 var salesChart = echarts.init(salesChartDom);
                 var salesOption = {
@@ -883,8 +892,48 @@
                     }]
                 });
             }
+
+            // ... Injection de données factices pour tester l'affichage ---
+            // Commandes
+            const orders = [
+                { client: 'Alice Dupont', produits: 'Tomates, Salades', montant: '5 000 FCFA', statut: 'Livré' },
+                { client: 'Bob Martin', produits: 'Pommes, Carottes', montant: '3 200 FCFA', statut: 'En cours' }
+            ];
+            const ordersTbody = document.getElementById('orders-tbody');
+            if (ordersTbody) {
+                ordersTbody.innerHTML = orders.map(order => `
+                <tr class="border-t border-gray-100">
+                    <td class="py-3">${order.client}</td>
+                    <td class="py-3">${order.produits}</td>
+                    <td class="py-3">${order.montant}</td>
+                    <td class="py-3"><span class="px-2 py-1 ${order.statut === 'Livré' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} rounded text-xs">${order.statut}</span></td>
+                    <td class="py-3"><button class="text-primary hover:text-primary-dark">Détails</button></td>
+                </tr>
+            `).join('');
+            }
+            // Livraisons
+            const deliveries = [
+                { numero: 'LIV001', client: 'Alice Dupont', date: '2024-06-01', statut: 'Livré' },
+                { numero: 'LIV002', client: 'Bob Martin', date: '2024-06-02', statut: 'En cours' }
+            ];
+            const deliveriesTbody = document.getElementById('deliveries-tbody');
+            if (deliveriesTbody) {
+                deliveriesTbody.innerHTML = deliveries.map(delivery => `
+                <tr class="border-t border-gray-100">
+                    <td class="py-3">${delivery.numero}</td>
+                    <td class="py-3">${delivery.client}</td>
+                    <td class="py-3">${delivery.date}</td>
+                    <td class="py-3"><span class="px-2 py-1 ${delivery.statut === 'Livré' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} rounded text-xs">${delivery.statut}</span></td>
+                    <td class="py-3"><button class="text-primary hover:text-primary-dark">Détails</button></td>
+                </tr>
+            `).join('');
+            }
+            // Statistiques
+            const statOrders = document.getElementById('stat-orders-count');
+            const statSales = document.getElementById('stat-sales-amount');
+            if (statOrders) statOrders.textContent = '152';
+            if (statSales) statSales.textContent = '1 250 000 FCFA';
+            // --- Fin injection données ---
         });
     </script>
-</body>
-
 </html>
