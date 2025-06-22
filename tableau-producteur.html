@@ -230,13 +230,17 @@
         <!-- Mobile menu, an example structure if needed -->
         <div id="mobile-menu" class="md:hidden hidden bg-white shadow-md">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <span class="block px-3 py-2 rounded-md text-base font-medium text-gray-700">Bienvenue, Producteur X</span>
-                <button id="mobile-logout-button" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:bg-red-100 hover:text-red-700">
+                <span class="block px-3 py-2 rounded-md text-base font-medium text-gray-700">Bienvenue, Producteur
+                    X</span>
+                <button id="mobile-logout-button"
+                    class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:bg-red-100 hover:text-red-700">
                     Se déconnecter
                 </button>
-                 <hr class="my-2">
-                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Accueil</a>
-                <a href="shop.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">MarketPlace</a>
+                <hr class="my-2">
+                <a href="index.html"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Accueil</a>
+                <a href="shop.html"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">MarketPlace</a>
                 <!-- Add other nav links for mobile here if they differ from desktop or if sidebar items should be here too -->
             </div>
         </div>
@@ -246,7 +250,8 @@
     <!-- ############################################## -->
     <!-- Ajouter cette section après le Hero Section existant -->
     <section class="py-16 bg-white">
-         મુખ્ય <!-- Changed: Removed container mx-auto and px-4 to allow full width, added px-4 or sm:px-6 lg:px-8 for responsive padding directly on children or specific sections if needed -->
+
+        <!-- Changed: Removed container mx-auto and px-4 to allow full width, added px-4 or sm:px-6 lg:px-8 for responsive padding directly on children or specific sections if needed -->
         <div class="w-full max-w-full px-4 sm:px-6 lg:px-8">
             <!-- Dashboard Producteur -->
             <!-- Removed rounded-lg and shadow-xl from here to apply it potentially more locally or let content define it -->
@@ -260,7 +265,8 @@
 
                         <nav class="space-y-2">
                             <a href="#" class="nav-tab flex items-center p-3 bg-primary/20 rounded"
-                                data-target="dashboard"> <!-- Ensure this matches the 'initialTabTarget' in JS if it's the default -->
+                                data-target="dashboard">
+                                <!-- Ensure this matches the 'initialTabTarget' in JS if it's the default -->
                                 <i class="ri-dashboard-line mr-3"></i>
                                 <span>Tableau de bord</span>
                             </a>
@@ -296,7 +302,8 @@
                     <div class="flex-1 p-6">
 
                         <!-- Section Tableau de bord -->
-                        <div id="dashboard-content" class="dashboard-section tab-content active"> <!-- Changed ID for clarity -->
+                        <div id="dashboard-content" class="dashboard-section tab-content active">
+                            <!-- Changed ID for clarity -->
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-semibold">Tableau de bord</h3>
                                 <div class="flex items-center">
@@ -340,7 +347,8 @@
                                             <i class="ri-shopping-cart-2-line text-green-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-green-600 mt-2" id="stats-commandes-nouvelles">0 nouvelles aujourd'hui</p>
+                                    <p class="text-xs text-green-600 mt-2" id="stats-commandes-nouvelles">0 nouvelles
+                                        aujourd'hui</p>
                                 </div>
 
                                 <div class="bg-orange-50 p-4 rounded-lg">
@@ -354,7 +362,8 @@
                                             <i class="ri-store-2-line text-orange-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-orange-600 mt-2" id="stats-produits-stock-faible">0 stocks faibles</p>
+                                    <p class="text-xs text-orange-600 mt-2" id="stats-produits-stock-faible">0 stocks
+                                        faibles</p>
                                 </div>
 
                                 <div class="bg-purple-50 p-4 rounded-lg">
@@ -368,21 +377,25 @@
                                             <i class="ri-user-line text-purple-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-purple-600 mt-2" id="stats-clients-nouveaux">+0 cette semaine</p>
+                                    <p class="text-xs text-purple-600 mt-2" id="stats-clients-nouveaux">+0 cette semaine
+                                    </p>
                                 </div>
                             </div>
 
                             <!-- Sales Chart -->
                             <div class="bg-white rounded-lg shadow p-4 mb-6">
                                 <h4 class="text-lg font-medium mb-4">Ventes mensuelles</h4>
-                                <div id="salesChart" style="width: 100%; height: 300px;"></div> <!-- ID is already good -->
+                                <div id="salesChart" style="width: 100%; height: 300px;"></div>
+                                <!-- ID is already good -->
                             </div>
 
                             <!-- Recent Orders -->
                             <div class="bg-white rounded-lg shadow p-4">
                                 <div class="flex justify-between items-center mb-4">
                                     <h4 class="text-lg font-medium">Commandes récentes</h4>
-                                    <a href="#" class="text-primary text-sm" onclick="document.querySelector('[data-target=commandes]').click(); return false;">Voir tout</a>
+                                    <a href="#" class="text-primary text-sm"
+                                        onclick="document.querySelector('[data-target=commandes]').click(); return false;">Voir
+                                        tout</a>
                                 </div>
 
                                 <div class="overflow-x-auto">
@@ -419,12 +432,14 @@
                                 <form class="space-y-4" id="product-form-html">
                                     <div class="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label for="product-name" class="block text-gray-700 mb-2">Nom du produit</label>
+                                            <label for="product-name" class="block text-gray-700 mb-2">Nom du
+                                                produit</label>
                                             <input type="text" id="product-name" name="product-name" required
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                         <div>
-                                            <label for="product-category" class="block text-gray-700 mb-2">Catégorie</label>
+                                            <label for="product-category"
+                                                class="block text-gray-700 mb-2">Catégorie</label>
                                             <select id="product-category" name="product-category" required
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                                 <option value="">Sélectionner une catégorie</option>
@@ -440,31 +455,40 @@
 
                                     <div class="grid md:grid-cols-3 gap-4">
                                         <div>
-                                            <label for="product-price" class="block text-gray-700 mb-2">Prix (FCFA)</label>
-                                            <input type="number" id="product-price" name="product-price" required min="0" step="any"
+                                            <label for="product-price" class="block text-gray-700 mb-2">Prix
+                                                (FCFA)</label>
+                                            <input type="number" id="product-price" name="product-price" required
+                                                min="0" step="any"
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                         <div>
-                                            <label for="product-unit" class="block text-gray-700 mb-2">Unité (ex: kg, pièce)</label>
-                                            <input type="text" id="product-unit" name="product-unit" required placeholder="kg, pièce, litre..."
+                                            <label for="product-unit" class="block text-gray-700 mb-2">Unité (ex: kg,
+                                                pièce)</label>
+                                            <input type="text" id="product-unit" name="product-unit" required
+                                                placeholder="kg, pièce, litre..."
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                         <div>
-                                            <label for="product-quantity-value" class="block text-gray-700 mb-2">Quantité en Stock</label>
-                                            <input type="number" id="product-quantity-value" name="product-quantity-value" required min="0"
+                                            <label for="product-quantity-value"
+                                                class="block text-gray-700 mb-2">Quantité en Stock</label>
+                                            <input type="number" id="product-quantity-value"
+                                                name="product-quantity-value" required min="0"
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label for="product-description" class="block text-gray-700 mb-2">Description</label>
+                                        <label for="product-description"
+                                            class="block text-gray-700 mb-2">Description</label>
                                         <textarea id="product-description" name="product-description" rows="3"
                                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary"></textarea>
                                     </div>
 
                                     <div>
-                                        <label for="product-image-file" class="block text-gray-700 mb-2">Image du produit</label>
-                                        <input type="file" id="product-image-file" name="product-image-file" accept="image/*"
+                                        <label for="product-image-file" class="block text-gray-700 mb-2">Image du
+                                            produit</label>
+                                        <input type="file" id="product-image-file" name="product-image-file"
+                                            accept="image/*"
                                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         <!-- Basic file input, styling can be improved -->
                                     </div>
@@ -556,11 +580,11 @@
 
                         <!-- Section Paramètres -->
                         <div id="parametres-content" class="mb-12 tab-content"> <!-- Changed ID for clarity -->
-                           <h3 class="text-2xl font-bold text-gray-900 mb-6">Paramètres</h3>
-                           <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Paramètres</h3>
+                            <div class="bg-white rounded-lg shadow p-6">
                                 <p class="text-gray-600">Section des paramètres du producteur (à développer).</p>
                                 <!-- Form fields for profile, bank details, etc. -->
-                           </div>
+                            </div>
                         </div>
 
                     </div>
@@ -573,7 +597,7 @@
 
 
     <!-- Call to Action -->
-    <section class="py-16 bg-primary/10">
+    <!-- <section class="py-16 bg-primary/10">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Prêt à moderniser votre activité agricole ?</h2>
             <p class="text-gray-600 max-w-2xl mx-auto mb-8">Rejoignez notre plateforme et découvrez comment la
@@ -588,10 +612,10 @@
                     l'application</a>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
+    <!-- <footer class="bg-gray-800 text-white py-12">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
@@ -668,7 +692,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </footer> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <script>
@@ -858,4 +882,5 @@
             // --- Fin injection données ---
         });
     </script>
+
 </html>
