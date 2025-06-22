@@ -57,6 +57,32 @@ const ProducerDashboard = {
         }
 
         // Potentially listeners for edit/delete product buttons once products are rendered
+
+        // Logout button listeners
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', this.handleLogout);
+        }
+        const mobileLogoutButton = document.getElementById('mobile-logout-button');
+        if (mobileLogoutButton) {
+            mobileLogoutButton.addEventListener('click', this.handleLogout);
+        }
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    },
+
+    handleLogout() {
+        alert('Déconnexion simulée réussie. Redirection...');
+        // In a real application, you would call the actual logout endpoint:
+        // window.location.href = 'auth/process.php?action=logout';
+        window.location.href = 'index.html'; // Redirect to homepage for simulation
     },
 
     async loadInitialData() {

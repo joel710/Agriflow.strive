@@ -214,14 +214,30 @@
                 </nav>
             </div>
             <div class="flex items-center">
-                <a href="#"
-                    class="hidden md:inline-block px-4 py-2 text-gray-700 hover:text-primary mr-2 whitespace-nowrap">Se
-                    connecter</a>
-                <a href="#"
-                    class="bg-primary text-white px-5 py-2 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap">S'inscrire</a>
-                <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center">
+                <!-- Remplacement des boutons Se connecter/S'inscrire -->
+                <div class="hidden md:flex items-center">
+                    <span class="text-gray-700 mr-4">Bienvenue, Producteur X</span>
+                    <button id="logout-button"
+                        class="bg-red-500 text-white px-4 py-2 !rounded-button hover:bg-red-600 transition whitespace-nowrap">
+                        Se déconnecter
+                    </button>
+                </div>
+                <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center" id="mobile-menu-button">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
+            </div>
+        </div>
+        <!-- Mobile menu, an example structure if needed -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-md">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <span class="block px-3 py-2 rounded-md text-base font-medium text-gray-700">Bienvenue, Producteur X</span>
+                <button id="mobile-logout-button" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:bg-red-100 hover:text-red-700">
+                    Se déconnecter
+                </button>
+                 <hr class="my-2">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Accueil</a>
+                <a href="shop.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">MarketPlace</a>
+                <!-- Add other nav links for mobile here if they differ from desktop or if sidebar items should be here too -->
             </div>
         </div>
     </header>
@@ -230,9 +246,11 @@
     <!-- ############################################## -->
     <!-- Ajouter cette section après le Hero Section existant -->
     <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
+         મુખ્ય <!-- Changed: Removed container mx-auto and px-4 to allow full width, added px-4 or sm:px-6 lg:px-8 for responsive padding directly on children or specific sections if needed -->
+        <div class="w-full max-w-full px-4 sm:px-6 lg:px-8">
             <!-- Dashboard Producteur -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <!-- Removed rounded-lg and shadow-xl from here to apply it potentially more locally or let content define it -->
+            <div class="bg-white overflow-hidden">
                 <div class="flex flex-col md:flex-row">
                     <!-- Sidebar -->
                     <div class="bg-gray-800 text-white p-4 md:w-64">
@@ -242,7 +260,7 @@
 
                         <nav class="space-y-2">
                             <a href="#" class="nav-tab flex items-center p-3 bg-primary/20 rounded"
-                                data-target="dashboard">
+                                data-target="dashboard"> <!-- Ensure this matches the 'initialTabTarget' in JS if it's the default -->
                                 <i class="ri-dashboard-line mr-3"></i>
                                 <span>Tableau de bord</span>
                             </a>
