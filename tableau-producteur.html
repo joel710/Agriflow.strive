@@ -278,7 +278,7 @@
                     <div class="flex-1 p-6">
 
                         <!-- Section Tableau de bord -->
-                        <div id="dashboard" class="dashboard-section tab-content active">
+                        <div id="dashboard-content" class="dashboard-section tab-content active"> <!-- Changed ID for clarity -->
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-semibold">Tableau de bord</h3>
                                 <div class="flex items-center">
@@ -301,70 +301,70 @@
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <p class="text-sm text-gray-500">Ventes du jour</p>
-                                            <p class="text-2xl font-semibold">386 000 FCFA</p>
+                                            <p class="text-2xl font-semibold" id="stats-ventes-jour-montant">0 FCFA</p>
                                         </div>
                                         <div
                                             class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                             <i class="ri-money-euro-circle-line text-blue-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-green-600 mt-2">+12% par rapport à hier</p>
+                                    <p class="text-xs text-green-600 mt-2" id="stats-ventes-jour-variation">+0%</p>
                                 </div>
 
                                 <div class="bg-green-50 p-4 rounded-lg">
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <p class="text-sm text-gray-500">Commandes</p>
-                                            <p class="text-2xl font-semibold">24</p>
+                                            <p class="text-2xl font-semibold" id="stats-commandes-total">0</p>
                                         </div>
                                         <div
                                             class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                                             <i class="ri-shopping-cart-2-line text-green-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-green-600 mt-2">5 nouvelles aujourd'hui</p>
+                                    <p class="text-xs text-green-600 mt-2" id="stats-commandes-nouvelles">0 nouvelles aujourd'hui</p>
                                 </div>
 
                                 <div class="bg-orange-50 p-4 rounded-lg">
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <p class="text-sm text-gray-500">Produits</p>
-                                            <p class="text-2xl font-semibold">42</p>
+                                            <p class="text-2xl font-semibold" id="stats-produits-total">0</p>
                                         </div>
                                         <div
                                             class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
                                             <i class="ri-store-2-line text-orange-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-orange-600 mt-2">3 stocks faibles</p>
+                                    <p class="text-xs text-orange-600 mt-2" id="stats-produits-stock-faible">0 stocks faibles</p>
                                 </div>
 
                                 <div class="bg-purple-50 p-4 rounded-lg">
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <p class="text-sm text-gray-500">Clients</p>
-                                            <p class="text-2xl font-semibold">156</p>
+                                            <p class="text-2xl font-semibold" id="stats-clients-total">0</p>
                                         </div>
                                         <div
                                             class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                                             <i class="ri-user-line text-purple-500"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-purple-600 mt-2">+8 cette semaine</p>
+                                    <p class="text-xs text-purple-600 mt-2" id="stats-clients-nouveaux">+0 cette semaine</p>
                                 </div>
                             </div>
 
                             <!-- Sales Chart -->
                             <div class="bg-white rounded-lg shadow p-4 mb-6">
                                 <h4 class="text-lg font-medium mb-4">Ventes mensuelles</h4>
-                                <div id="salesChart" style="width: 100%; height: 300px;"></div>
+                                <div id="salesChart" style="width: 100%; height: 300px;"></div> <!-- ID is already good -->
                             </div>
 
                             <!-- Recent Orders -->
                             <div class="bg-white rounded-lg shadow p-4">
                                 <div class="flex justify-between items-center mb-4">
                                     <h4 class="text-lg font-medium">Commandes récentes</h4>
-                                    <a href="#" class="text-primary text-sm">Voir tout</a>
+                                    <a href="#" class="text-primary text-sm" onclick="document.querySelector('[data-target=commandes]').click(); return false;">Voir tout</a>
                                 </div>
 
                                 <div class="overflow-x-auto">
@@ -378,43 +378,8 @@
                                                 <th class="pb-3 font-medium">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr class="border-t border-gray-100">
-                                                <td class="py-3">Marie Lefevre</td>
-                                                <td class="py-3">Tomates, Courgettes, Aubergines</td>
-                                                <td class="py-3">42,50 FCFA</td>
-                                                <td class="py-3"><span
-                                                        class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">En
-                                                        préparation</span></td>
-                                                <td class="py-3">
-                                                    <button
-                                                        class="text-primary hover:text-primary-dark">Détails</button>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-t border-gray-100">
-                                                <td class="py-3">Pierre Moreau</td>
-                                                <td class="py-3">Pommes, Poires</td>
-                                                <td class="py-3">18,75 FCFA</td>
-                                                <td class="py-3"><span
-                                                        class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">En
-                                                        livraison</span></td>
-                                                <td class="py-3">
-                                                    <button
-                                                        class="text-primary hover:text-primary-dark">Détails</button>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-t border-gray-100">
-                                                <td class="py-3">Restaurant Le Terroir</td>
-                                                <td class="py-3">Carottes, Pommes de terre, Oignons</td>
-                                                <td class="py-3">87,20 FCFA</td>
-                                                <td class="py-3"><span
-                                                        class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Livré</span>
-                                                </td>
-                                                <td class="py-3">
-                                                    <button
-                                                        class="text-primary hover:text-primary-dark">Détails</button>
-                                                </td>
-                                            </tr>
+                                        <tbody id="dashboard-recent-orders-tbody">
+                                            <!-- Recent orders will be populated by JavaScript -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -422,7 +387,7 @@
                         </div>
 
                         <!-- Section Mes Produits -->
-                        <div id="mes-produits" class="mb-12 tab-content">
+                        <div id="mes-produits-content" class="mb-12 tab-content"> <!-- Changed ID for clarity -->
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-2xl font-bold text-gray-900">Mes produits</h3>
                                 <button
@@ -433,62 +398,60 @@
 
                             <!-- Formulaire Ajout Produit -->
                             <div class="bg-white rounded-lg shadow p-4 mb-6 hidden" id="product-form">
-                                <form class="space-y-4">
+                                <form class="space-y-4" id="product-form-html">
                                     <div class="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label class="block text-gray-700 mb-2">Nom du produit</label>
-                                            <input type="text"
+                                            <label for="product-name" class="block text-gray-700 mb-2">Nom du produit</label>
+                                            <input type="text" id="product-name" name="product-name" required
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                         <div>
-                                            <label class="block text-gray-700 mb-2">Catégorie</label>
-                                            <select
+                                            <label for="product-category" class="block text-gray-700 mb-2">Catégorie</label>
+                                            <select id="product-category" name="product-category" required
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
-                                                <option>Légumes</option>
-                                                <option>Fruits</option>
-                                                <option>Produits laitiers</option>
+                                                <option value="">Sélectionner une catégorie</option>
+                                                <option value="legumes">Légumes</option>
+                                                <option value="fruits">Fruits</option>
+                                                <option value="produits_laitiers">Produits laitiers</option>
+                                                <option value="cereales">Céréales</option>
+                                                <option value="viande">Viande</option>
+                                                <option value="autre">Autre</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="grid md:grid-cols-3 gap-4">
                                         <div>
-                                            <label class="block text-gray-700 mb-2">Prix (€)</label>
-                                            <input type="number"
+                                            <label for="product-price" class="block text-gray-700 mb-2">Prix (FCFA)</label>
+                                            <input type="number" id="product-price" name="product-price" required min="0" step="any"
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                         <div>
-                                            <label class="block text-gray-700 mb-2">Quantité</label>
-                                            <input type="number"
+                                            <label for="product-unit" class="block text-gray-700 mb-2">Unité (ex: kg, pièce)</label>
+                                            <input type="text" id="product-unit" name="product-unit" required placeholder="kg, pièce, litre..."
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
                                         </div>
                                         <div>
-                                            <label class="block text-gray-700 mb-2">Stock</label>
-                                            <select
+                                            <label for="product-quantity-value" class="block text-gray-700 mb-2">Quantité en Stock</label>
+                                            <input type="number" id="product-quantity-value" name="product-quantity-value" required min="0"
                                                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
-                                                <option>En stock</option>
-                                                <option>Stock faible</option>
-                                                <option>Rupture</option>
-                                            </select>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label class="block text-gray-700 mb-2">Description</label>
-                                        <textarea rows="3"
+                                        <label for="product-description" class="block text-gray-700 mb-2">Description</label>
+                                        <textarea id="product-description" name="product-description" rows="3"
                                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary"></textarea>
                                     </div>
 
                                     <div>
-                                        <label class="block text-gray-700 mb-2">Image du produit</label>
-                                        <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center">
-                                            <i class="ri-image-add-line text-3xl text-gray-400 mb-2"></i>
-                                            <p class="text-gray-500">Glissez-déposez ou <span
-                                                    class="text-primary cursor-pointer">parcourir</span></p>
-                                        </div>
+                                        <label for="product-image-file" class="block text-gray-700 mb-2">Image du produit</label>
+                                        <input type="file" id="product-image-file" name="product-image-file" accept="image/*"
+                                            class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-primary">
+                                        <!-- Basic file input, styling can be improved -->
                                     </div>
 
-                                    <button
+                                    <button type="button" id="save-product-button"
                                         class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition">
                                         Enregistrer le produit
                                     </button>
@@ -497,80 +460,12 @@
 
                             <!-- Liste des Produits -->
                             <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <!-- Produit 1 -->
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                                    <div class="h-48 bg-gray-100 relative">
-                                        <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape"
-                                            class="w-full h-full object-cover">
-                                        <span
-                                            class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded text-xs">En
-                                            stock</span>
-                                    </div>
-                                    <div class="p-4">
-                                        <h4 class="font-semibold text-lg">Tomates Bio</h4>
-                                        <div class="flex justify-between items-center mt-2">
-                                            <span class="text-primary font-bold">3,50 FCFA/kg</span>
-                                            <div class="flex items-center">
-                                                <i
-                                                    class="ri-edit-box-line text-gray-500 hover:text-primary cursor-pointer mr-2"></i>
-                                                <i
-                                                    class="ri-delete-bin-line text-gray-500 hover:text-red-500 cursor-pointer"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Produit 2 -->
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                                    <div class="h-48 bg-gray-100 relative">
-                                        <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape"
-                                            class="w-full h-full object-cover">
-                                        <span
-                                            class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded text-xs">En
-                                            stock</span>
-                                    </div>
-                                    <div class="p-4">
-                                        <h4 class="font-semibold text-lg">Tomates Bio</h4>
-                                        <div class="flex justify-between items-center mt-2">
-                                            <span class="text-primary font-bold">3,50 FCFA/kg</span>
-                                            <div class="flex items-center">
-                                                <i
-                                                    class="ri-edit-box-line text-gray-500 hover:text-primary cursor-pointer mr-2"></i>
-                                                <i
-                                                    class="ri-delete-bin-line text-gray-500 hover:text-red-500 cursor-pointer"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Produit 3 -->
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                                    <div class="h-48 bg-gray-100 relative">
-                                        <img src="https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape"
-                                            class="w-full h-full object-cover">
-                                        <span
-                                            class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded text-xs">En
-                                            stock</span>
-                                    </div>
-                                    <div class="p-4">
-                                        <h4 class="font-semibold text-lg">Tomates Bio</h4>
-                                        <div class="flex justify-between items-center mt-2">
-                                            <span class="text-primary font-bold">3,50 FCFA/kg</span>
-                                            <div class="flex items-center">
-                                                <i
-                                                    class="ri-edit-box-line text-gray-500 hover:text-primary cursor-pointer mr-2"></i>
-                                                <i
-                                                    class="ri-delete-bin-line text-gray-500 hover:text-red-500 cursor-pointer"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Plus de produits... -->
+                                <!-- Products will be populated by JavaScript -->
                             </div>
                         </div>
 
                         <!-- Section Commandes (Historique des commandes) -->
-                        <div id="commandes" class="mb-12 tab-content">
+                        <div id="commandes-content" class="mb-12 tab-content"> <!-- Changed ID for clarity -->
                             <div class="bg-white rounded-lg shadow p-6 mb-8">
                                 <div class="flex justify-between items-center mb-4">
                                     <h3 class="text-lg font-semibold">🛒 Historique des commandes</h3>
@@ -601,7 +496,7 @@
                         </div>
 
                         <!-- Section Livraisons -->
-                        <div id="livraisons" class="mb-12 tab-content">
+                        <div id="livraisons-content" class="mb-12 tab-content"> <!-- Changed ID for clarity -->
                             <h3 class="text-2xl font-bold text-gray-900 mb-6">Suivi des livraisons</h3>
                             <div class="bg-white rounded-lg shadow p-6 mb-8">
                                 <table class="w-full">
@@ -611,34 +506,43 @@
                                             <th class="pb-3">Client</th>
                                             <th class="pb-3">Date estimée</th>
                                             <th class="pb-3">Statut</th>
-                                            <th class="pb-3"></th>
+                                            <th class="pb-3">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="deliveries-tbody">
-                                        <!-- Les lignes de livraisons seront injectées ici par JS -->
+                                        <!-- Delivery rows will be populated by JavaScript -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
                         <!-- Section Statistiques -->
-                        <div id="statistiques" class="mb-12 tab-content">
+                        <div id="statistiques-content" class="mb-12 tab-content"> <!-- Changed ID for clarity -->
                             <h3 class="text-2xl font-bold text-gray-900 mb-6">Statistiques</h3>
                             <div class="grid md:grid-cols-2 gap-6">
                                 <div class="bg-white rounded-lg shadow p-4">
-                                    <h4 class="font-semibold mb-4">Commandes</h4>
+                                    <h4 class="font-semibold mb-4">Commandes Totales</h4>
                                     <p class="text-3xl font-bold text-primary" id="stat-orders-count">0</p>
                                 </div>
                                 <div class="bg-white rounded-lg shadow p-4">
-                                    <h4 class="font-semibold mb-4">Ventes</h4>
+                                    <h4 class="font-semibold mb-4">Ventes Totales</h4>
                                     <p class="text-3xl font-bold text-primary" id="stat-sales-amount">0 FCFA</p>
                                 </div>
+                                <!-- Add more detailed stats here if needed, e.g., charts for product performance -->
+                                <!-- <div class="bg-white rounded-lg shadow p-4 md:col-span-2">
+                                    <h4 class="font-semibold mb-4">Performance des Produits</h4>
+                                    <div id="productsPerformanceChart" style="width: 100%; height: 250px;"></div>
+                                </div> -->
                             </div>
                         </div>
 
-                        <!-- Section Paramètres (à ajouter si manquante) -->
-                        <div id="parametres" class="mb-12 tab-content">
-                            ...
+                        <!-- Section Paramètres -->
+                        <div id="parametres-content" class="mb-12 tab-content"> <!-- Changed ID for clarity -->
+                           <h3 class="text-2xl font-bold text-gray-900 mb-6">Paramètres</h3>
+                           <div class="bg-white rounded-lg shadow p-6">
+                                <p class="text-gray-600">Section des paramètres du producteur (à développer).</p>
+                                <!-- Form fields for profile, bank details, etc. -->
+                           </div>
                         </div>
 
                     </div>
