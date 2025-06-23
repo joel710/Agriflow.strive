@@ -97,6 +97,25 @@
                     if (form) form.classList.toggle('hidden');
                 });
             }
+
+            // Gestion de la soumission du formulaire d'ajout de produit
+            const productForm = document.getElementById('product-form-html');
+            if (productForm) {
+                productForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    // Récupérer les valeurs des champs
+                    const name = document.getElementById('product-name').value;
+                    const category = document.getElementById('product-category').value;
+                    const price = document.getElementById('product-price').value;
+                    const unit = document.getElementById('product-unit').value;
+                    const quantity = document.getElementById('product-quantity-value').value;
+                    const description = document.getElementById('product-description').value;
+                    // Afficher une alerte de confirmation (exemple)
+                    alert('Produit enregistré : ' + name + '\nCatégorie : ' + category + '\nPrix : ' + price + ' FCFA' + '\nUnité : ' + unit + '\nQuantité : ' + quantity + '\nDescription : ' + description);
+                    // Tu peux ici envoyer les données à ton backend ou les afficher dans la liste
+                    // productForm.reset(); // Pour réinitialiser le formulaire si besoin
+                });
+            }
         });
     </script>
     <style>
@@ -532,7 +551,7 @@
                                             accept="image/*"
                                             class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
                                     </div>
-                                    <button type="button" id="save-product-button"
+                                    <button type="submit" id="save-product-button"
                                         class="bg-primary text-white px-4 py-2 sm:px-6 sm:py-2 !rounded-button hover:bg-opacity-90 transition text-sm sm:text-base">
                                         Enregistrer
                                     </button>
