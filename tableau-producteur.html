@@ -199,7 +199,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body class="bg-gray-50 flex flex-col min-h-screen h-full">
     <!-- Navbar -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -283,58 +283,62 @@
 
     <!-- ############################################## -->
     <!-- Ajouter cette section après le Hero Section existant -->
-    <section class="bg-white flex-1">
+    <section class="bg-white flex-1 min-h-screen flex">
 
         <!-- Changed: Removed container mx-auto and px-4 to allow full width, added px-4 or sm:px-6 lg:px-8 for responsive padding directly on children or specific sections if needed -->
-        <div class="w-full h-full">
+        <div class="w-full h-full flex-1 min-h-0">
             <!-- Dashboard Producteur -->
             <!-- Removed rounded-lg and shadow-xl from here to apply it potentially more locally or let content define it -->
-            <div class="bg-white overflow-hidden h-full">
-                <div class="flex flex-col md:flex-row h-full">
+            <div class="bg-white overflow-hidden h-full flex-1 min-h-0">
+                <div class="flex flex-col md:flex-row h-full min-h-0 flex-1">
                     <!-- Sidebar -->
-                    <div class="bg-gray-800 text-white p-4 md:w-64 overflow-y-auto">
-                        <div class="flex items-center mb-8">
-                            <span id="sidebar-title" class="text-xl font-['Pacifico'] text-white">Agritech</span>
+                    <aside class="bg-gray-800 text-white p-4 md:w-64 flex flex-col min-h-screen justify-between">
+                        <div>
+                            <div class="flex items-center mb-8">
+                                <span id="sidebar-title" class="text-xl font-['Pacifico'] text-white">Agritech</span>
+                            </div>
+                            <nav class="space-y-2">
+                                <a href="#" class="nav-tab flex items-center p-3 bg-primary/20 rounded"
+                                    data-target="dashboard">
+                                    <!-- Ensure this matches the 'initialTabTarget' in JS if it's the default -->
+                                    <i class="ri-dashboard-line mr-3"></i>
+                                    <span>Tableau de bord</span>
+                                </a>
+                                <a href="#" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded"
+                                    data-target="mes-produits">
+                                    <i class="ri-store-2-line mr-3"></i>
+                                    <span>Mes produits</span>
+                                </a>
+                                <a href="#" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded"
+                                    data-target="commandes">
+                                    <i class="ri-shopping-cart-2-line mr-3"></i>
+                                    <span>Commandes</span>
+                                </a>
+                                <a href="#" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded"
+                                    data-target="livraisons">
+                                    <i class="ri-truck-line mr-3"></i>
+                                    <span>Livraisons</span>
+                                </a>
+                                <a href="#" data-target="statistiques"
+                                    class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded">
+                                    <i class="ri-bar-chart-box-line mr-3"></i>
+                                    <span>Statistiques</span>
+                                </a>
+                                <a href="#" data-target="parametres"
+                                    class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded">
+                                    <i class="ri-settings-3-line mr-3"></i>
+                                    <span>Paramètres</span>
+                                </a>
+                            </nav>
                         </div>
-
-                        <nav class="space-y-2">
-                            <a href="#" class="nav-tab flex items-center p-3 bg-primary/20 rounded"
-                                data-target="dashboard">
-                                <!-- Ensure this matches the 'initialTabTarget' in JS if it's the default -->
-                                <i class="ri-dashboard-line mr-3"></i>
-                                <span>Tableau de bord</span>
-                            </a>
-                            <a href="#" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded"
-                                data-target="mes-produits">
-                                <i class="ri-store-2-line mr-3"></i>
-                                <span>Mes produits</span>
-                            </a>
-                            <a href="#" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded"
-                                data-target="commandes">
-                                <i class="ri-shopping-cart-2-line mr-3"></i>
-                                <span>Commandes</span>
-                            </a>
-                            <a href="#" class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded"
-                                data-target="livraisons">
-                                <i class="ri-truck-line mr-3"></i>
-                                <span>Livraisons</span>
-                            </a>
-                            <a href="#" data-target="statistiques"
-                                class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded">
-                                <i class="ri-bar-chart-box-line mr-3"></i>
-                                <span>Statistiques</span>
-                            </a>
-                            <a href="#" data-target="parametres"
-                                class="nav-tab flex items-center p-3 hover:bg-gray-700 rounded">
-                                <i class="ri-settings-3-line mr-3"></i>
-                                <span>Paramètres</span>
-                            </a>
-                        </nav>
-                    </div>
+                        <div class="mt-8 text-xs text-gray-400 text-center hidden md:block">
+                            © 2025 Agritech
+                        </div>
+                    </aside>
 
                     <!-- Main Content -->
 
-                    <div class="flex-1 p-4 sm:p-6"> <!-- Adjusted padding for responsiveness -->
+                    <div class="flex-1 p-4 sm:p-6 h-full min-h-0 overflow-y-auto">
 
 
                         <!-- Section Tableau de bord -->
@@ -351,9 +355,11 @@
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <p class="text-xs sm:text-sm text-gray-500">Ventes du jour</p>
-                                            <p class="text-xl sm:text-2xl font-semibold" id="stats-ventes-jour-montant">0 FCFA</p>
+                                            <p class="text-xl sm:text-2xl font-semibold" id="stats-ventes-jour-montant">
+                                                0 FCFA</p>
                                         </div>
-                                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                             <i class="ri-money-euro-circle-line text-blue-500 text-base sm:text-xl"></i>
                                         </div>
                                     </div>
@@ -364,13 +370,16 @@
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <p class="text-xs sm:text-sm text-gray-500">Commandes</p>
-                                            <p class="text-xl sm:text-2xl font-semibold" id="stats-commandes-total">0</p>
+                                            <p class="text-xl sm:text-2xl font-semibold" id="stats-commandes-total">0
+                                            </p>
                                         </div>
-                                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center">
                                             <i class="ri-shopping-cart-2-line text-green-500 text-base sm:text-xl"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-green-600 mt-2" id="stats-commandes-nouvelles">0 nouvelles aujourd'hui</p>
+                                    <p class="text-xs text-green-600 mt-2" id="stats-commandes-nouvelles">0 nouvelles
+                                        aujourd'hui</p>
                                 </div>
 
                                 <div class="bg-orange-50 p-3 sm:p-4 rounded-lg shadow">
@@ -379,11 +388,13 @@
                                             <p class="text-xs sm:text-sm text-gray-500">Produits</p>
                                             <p class="text-xl sm:text-2xl font-semibold" id="stats-produits-total">0</p>
                                         </div>
-                                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-full flex items-center justify-center">
                                             <i class="ri-store-2-line text-orange-500 text-base sm:text-xl"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-orange-600 mt-2" id="stats-produits-stock-faible">0 stocks faibles</p>
+                                    <p class="text-xs text-orange-600 mt-2" id="stats-produits-stock-faible">0 stocks
+                                        faibles</p>
                                 </div>
 
                                 <div class="bg-purple-50 p-3 sm:p-4 rounded-lg shadow">
@@ -392,18 +403,20 @@
                                             <p class="text-xs sm:text-sm text-gray-500">Clients</p>
                                             <p class="text-xl sm:text-2xl font-semibold" id="stats-clients-total">0</p>
                                         </div>
-                                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex items-center justify-center">
                                             <i class="ri-user-line text-purple-500 text-base sm:text-xl"></i>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-purple-600 mt-2" id="stats-clients-nouveaux">+0 cette semaine</p>
+                                    <p class="text-xs text-purple-600 mt-2" id="stats-clients-nouveaux">+0 cette semaine
+                                    </p>
                                 </div>
                             </div>
 
                             <!-- Sales Chart -->
                             <div class="bg-white rounded-lg shadow p-3 sm:p-4 mb-6">
                                 <h4 class="text-md sm:text-lg font-medium mb-4">Ventes mensuelles</h4>
-                                <div id="salesChart" style="width: 100%; height: 250px; sm:height: 300px;"></div>
+                                <div id="salesChart" class="w-full h-64 sm:h-72"></div>
                             </div>
 
                             <!-- Recent Orders -->
@@ -451,12 +464,14 @@
                                     <!-- Consider label font sizes and input padding for smaller screens -->
                                     <div class="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label for="product-name" class="block text-sm text-gray-700 mb-1 sm:mb-2">Nom du produit</label>
+                                            <label for="product-name"
+                                                class="block text-sm text-gray-700 mb-1 sm:mb-2">Nom du produit</label>
                                             <input type="text" id="product-name" name="product-name" required
                                                 class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-sm">
                                         </div>
                                         <div>
-                                            <label for="product-category" class="block text-sm text-gray-700 mb-1 sm:mb-2">Catégorie</label>
+                                            <label for="product-category"
+                                                class="block text-sm text-gray-700 mb-1 sm:mb-2">Catégorie</label>
                                             <select id="product-category" name="product-category" required
                                                 class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-sm">
                                                 <option value="">Sélectionner une catégorie</option>
@@ -472,29 +487,38 @@
                                     <!-- Other form fields: ensure padding and text size are responsive -->
                                     <div class="grid md:grid-cols-3 gap-4">
                                         <div>
-                                            <label for="product-price" class="block text-sm text-gray-700 mb-1 sm:mb-2">Prix (FCFA)</label>
-                                            <input type="number" id="product-price" name="product-price" required min="0" step="any"
+                                            <label for="product-price"
+                                                class="block text-sm text-gray-700 mb-1 sm:mb-2">Prix (FCFA)</label>
+                                            <input type="number" id="product-price" name="product-price" required
+                                                min="0" step="any"
                                                 class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-sm">
                                         </div>
                                         <div>
-                                            <label for="product-unit" class="block text-sm text-gray-700 mb-1 sm:mb-2">Unité</label>
-                                            <input type="text" id="product-unit" name="product-unit" required placeholder="kg, pièce..."
+                                            <label for="product-unit"
+                                                class="block text-sm text-gray-700 mb-1 sm:mb-2">Unité</label>
+                                            <input type="text" id="product-unit" name="product-unit" required
+                                                placeholder="kg, pièce..."
                                                 class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-sm">
                                         </div>
                                         <div>
-                                            <label for="product-quantity-value" class="block text-sm text-gray-700 mb-1 sm:mb-2">Stock</label>
-                                            <input type="number" id="product-quantity-value" name="product-quantity-value" required min="0"
+                                            <label for="product-quantity-value"
+                                                class="block text-sm text-gray-700 mb-1 sm:mb-2">Stock</label>
+                                            <input type="number" id="product-quantity-value"
+                                                name="product-quantity-value" required min="0"
                                                 class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-sm">
                                         </div>
                                     </div>
                                     <div>
-                                        <label for="product-description" class="block text-sm text-gray-700 mb-1 sm:mb-2">Description</label>
+                                        <label for="product-description"
+                                            class="block text-sm text-gray-700 mb-1 sm:mb-2">Description</label>
                                         <textarea id="product-description" name="product-description" rows="3"
                                             class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-sm"></textarea>
                                     </div>
                                     <div>
-                                        <label for="product-image-file" class="block text-sm text-gray-700 mb-1 sm:mb-2">Image</label>
-                                        <input type="file" id="product-image-file" name="product-image-file" accept="image/*"
+                                        <label for="product-image-file"
+                                            class="block text-sm text-gray-700 mb-1 sm:mb-2">Image</label>
+                                        <input type="file" id="product-image-file" name="product-image-file"
+                                            accept="image/*"
                                             class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
                                     </div>
                                     <button type="button" id="save-product-button"
@@ -505,7 +529,8 @@
                             </div>
 
                             <!-- Liste des Produits -->
-                            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                            <div id="products-grid"
+                                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                                 <!-- Products will be populated by JavaScript -->
                             </div>
                         </div>
@@ -514,9 +539,11 @@
                         <div id="commandes-content" class="mb-12 tab-content">
                             <div class="bg-white rounded-lg shadow p-3 sm:p-6 mb-8">
                                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                                    <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">🛒 Historique des commandes</h3>
+                                    <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">🛒 Historique des
+                                        commandes</h3>
                                     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                                        <input type="date" class="border rounded px-2 py-1.5 text-xs sm:text-sm w-full sm:w-auto">
+                                        <input type="date"
+                                            class="border rounded px-2 py-1.5 text-xs sm:text-sm w-full sm:w-auto">
                                         <select class="border rounded px-2 py-1.5 text-xs sm:text-sm w-full sm:w-auto">
                                             <option>Tous les statuts</option>
                                             <option>Livré</option>
@@ -529,7 +556,8 @@
                                         <thead>
                                             <tr class="text-left text-xs sm:text-sm text-gray-500 border-b">
                                                 <th class="p-2 font-medium">Client</th>
-                                                <th class="p-2 font-medium hidden md:table-cell">Produits</th> <!-- Masqué sur plus petits écrans que md -->
+                                                <th class="p-2 font-medium hidden md:table-cell">Produits</th>
+                                                <!-- Masqué sur plus petits écrans que md -->
                                                 <th class="p-2 font-medium">Montant</th>
                                                 <th class="p-2 font-medium">Statut</th>
                                                 <th class="p-2 font-medium"></th>
@@ -576,7 +604,8 @@
                                 </div>
                                 <div class="bg-white rounded-lg shadow p-3 sm:p-4">
                                     <h4 class="font-semibold mb-2 sm:mb-4 text-sm sm:text-base">Ventes Totales</h4>
-                                    <p class="text-2xl sm:text-3xl font-bold text-primary" id="stat-sales-amount">0 FCFA</p>
+                                    <p class="text-2xl sm:text-3xl font-bold text-primary" id="stat-sales-amount">0 FCFA
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -585,7 +614,8 @@
                         <div id="parametres-content" class="mb-12 tab-content">
                             <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Paramètres</h3>
                             <div class="bg-white rounded-lg shadow p-3 sm:p-6">
-                                <p class="text-gray-600 text-sm sm:text-base">Section des paramètres du producteur (à développer).</p>
+                                <p class="text-gray-600 text-sm sm:text-base">Section des paramètres du producteur (à
+                                    développer).</p>
                             </div>
                         </div>
 
@@ -896,5 +926,7 @@
             }
         });
     </script>
+
+</body>
 
 </html>
