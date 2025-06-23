@@ -55,28 +55,86 @@ Voir `database/agriflow.sql` pour le détail complet.
 
 L'API REST (PHP) expose les routes suivantes (voir `api/routes/api.php`) :
 
+### Utilisateurs (`/users`)
+- `GET /users` : (Admin) Liste de tous les utilisateurs avec filtres optionnels (`role`, `is_active`) et pagination.
+- `POST /users` : (Admin) Crée un nouvel utilisateur (client, producteur, ou admin). Nécessite `email`, `password`, `role`. Crée aussi le profil client/producteur de base.
+- `GET /users/me` : (Connecté) Récupère le profil de l'utilisateur actuellement connecté.
+- `GET /users/{id}` : (Admin ou Propriétaire) Récupère les détails d'un utilisateur spécifique.
+- `PUT /users/{id}` : (Admin ou Propriétaire) Met à jour les informations d'un utilisateur (Admin peut changer le rôle et `is_active`).
+- `DELETE /users/{id}` : (Admin) Désactive un utilisateur (soft delete) et supprime les profils associés (Customer/Producer).
+- `PUT /users/{id}/password` : (Admin ou Propriétaire) Met à jour le mot de passe d'un utilisateur.
+
+### Produits (`/products`)
+- `GET /products` : Liste tous les produits avec filtres optionnels (`producer_id`, `is_available`, `is_bio`) et pagination.
+- `POST /products` : (Admin ou Producteur) Crée un nouveau produit. Si Producteur, `producer_id` est automatiquement assigné.
+- `GET /products/{id}` : Récupère les détails d'un produit spécifique. (Les produits non disponibles peuvent être cachés aux clients non connectés/non propriétaires).
+- `PUT /products/{id}` : (Admin ou Producteur propriétaire) Met à jour un produit.
+- `DELETE /products/{id}` : (Admin ou Producteur propriétaire) Supprime un produit.
+
 ### Commandes (`/orders`)
-- `GET /orders` : Liste des commandes du client connecté
-- `POST /orders` : Création d'une commande
-- `GET /orders/{id}` : Détail d'une commande
-- `DELETE /orders/{id}` : Annulation d'une commande
-- `GET /orders/stats` : Statistiques commandes du client
+- `GET /orders` : (Client) Liste ses commandes. (Admin/Producteur) Liste toutes les commandes ou celles filtrées (ex: par statut, ou commandes contenant les produits d'un producteur - *filtrage producteur à affiner*). Pagination.
+- `POST /orders` : (Client) Crée une nouvelle commande. Le `customer_id` est automatiquement assigné. Les prix sont vérifiés côté serveur.
+- `GET /orders/{id}` : (Client propriétaire, Admin, Producteur concerné) Récupère le détail d'une commande, incluant les items et informations de livraison.
+- `PUT /orders/{id}` : (Admin, Producteur concerné, ou Client sous conditions) Met à jour une commande (ex: statut, adresse de livraison si statut le permet).
+- `DELETE /orders/{id}` : (Client propriétaire sous conditions, Admin, Producteur concerné) Annule une commande. Le statut de paiement peut passer à 'remboursée'.
+- `GET /orders/stats` : (Client) Statistiques des commandes du client connecté.
 
 ### Livraisons (`/deliveries`)
-- `GET /deliveries` : Liste des livraisons du client
-- `GET /deliveries/{id}` : Détail d'une livraison
-- `GET /deliveries/{id}/status` : Statut temps réel d'une livraison
-- `GET /deliveries/stats` : Statistiques de livraison
+- `GET /deliveries` : (Client) Liste ses livraisons. (Admin/Producteur) Liste toutes les livraisons ou celles filtrées. Pagination.
+- `POST /deliveries` : (Admin/Producteur) Crée une nouvelle livraison associée à une commande.
+- `GET /deliveries/{id}` : (Client propriétaire de la commande, Admin, Producteur concerné) Détail d'une livraison.
+- `PUT /deliveries/{id}` : (Admin/Producteur) Met à jour les informations d'une livraison (ex: livreur, notes, statut).
+- `DELETE /deliveries/{id}` : (Admin/Producteur) Supprime une livraison.
+- `PATCH /deliveries/{id}/status` : (Admin/Producteur) Met à jour spécifiquement le statut d'une livraison.
+- `GET /deliveries/{id}/status` : (Client propriétaire de la commande, Admin, Producteur concerné) Statut temps réel d'une livraison.
+- `GET /deliveries/stats` : (Client) Statistiques de livraison du client connecté.
+
+### Profils Producteurs (`/producers`)
+- `GET /producers` : Liste publique des profils producteurs avec pagination et filtres (`farm_type`).
+- `POST /producers` : (Admin) Crée un nouveau profil producteur pour un `user_id` existant (rôle producteur).
+- `GET /producers/my-profile` : (Producteur connecté) Récupère son propre profil producteur.
+- `PUT /producers/my-profile` : (Producteur connecté) Met à jour son propre profil producteur.
+- `GET /producers/{id}` : Récupère le profil public d'un producteur spécifique par son `producers.id`.
+- `PUT /producers/{id}` : (Admin ou Producteur propriétaire) Met à jour un profil producteur.
+- `DELETE /producers/{id}` : (Admin) Supprime un profil producteur (et les produits associés via CASCADE).
+
+### Profils Clients (`/customers`)
+- `GET /customers` : (Admin) Liste tous les profils clients avec pagination et filtres (`food_preferences`).
+- `POST /customers` : (Admin) Crée un nouveau profil client pour un `user_id` existant (rôle client).
+- `GET /customers/my-profile` : (Client connecté) Récupère son propre profil client.
+- `PUT /customers/my-profile` : (Client connecté) Met à jour son propre profil client.
+- `GET /customers/{id}` : (Admin ou Client propriétaire) Récupère un profil client spécifique par son `customers.id`.
+- `PUT /customers/{id}` : (Admin ou Client propriétaire) Met à jour un profil client.
+- `DELETE /customers/{id}` : (Admin) Supprime un profil client (et commandes/favoris associés via CASCADE).
+
+### Factures (`/invoices`)
+- `GET /invoices` : (Admin) Liste toutes les factures. (Client) Liste ses propres factures. Filtres (`customer_id`, `order_id`, `status`) et pagination.
+- `POST /invoices` : (Admin) Crée une nouvelle facture.
+- `GET /invoices/{id}` : (Admin ou Client propriétaire de la commande) Récupère une facture spécifique.
+- `PUT /invoices/{id}` : (Admin) Met à jour une facture (statut, date paiement, URL PDF).
+- `DELETE /invoices/{id}` : (Admin) Supprime une facture (sous conditions, ex: si statut 'annulee').
+
+### Notifications (`/notifications`)
+- `GET /notifications` : (Connecté) Liste les notifications de l'utilisateur connecté, avec filtres (`is_read`, `type`) et pagination. Retourne aussi un `unreadCount`.
+- `PATCH /notifications/{id}/read` : (Connecté) Marque une de ses notifications comme lue.
+- `PATCH /notifications/{id}/unread` : (Connecté) Marque une de ses notifications comme non lue.
+- `POST /notifications/mark-all-read` : (Connecté) Marque toutes les notifications de l'utilisateur comme lues.
+- `DELETE /notifications/{id}` : (Connecté) Supprime une de ses notifications.
+- `DELETE /notifications/all-read` : (Connecté) Supprime toutes les notifications lues de l'utilisateur.
+
+### Paramètres Utilisateur (`/user-settings`)
+- `GET /user-settings` : (Connecté) Récupère les paramètres de l'utilisateur connecté (notifications, langue, thème). Crée des paramètres par défaut si inexistants.
+- `PUT /user-settings` : (Connecté) Met à jour les paramètres de l'utilisateur connecté.
 
 ### Favoris (`/favorites`)
-- `GET /favorites` : Liste des favoris du client
-- `POST /favorites` : Ajouter un produit aux favoris
-- `DELETE /favorites/{product_id}` : Retirer un produit des favoris
-- `GET /favorites/{product_id}` : Vérifier si un produit est favori
-- `POST /favorites/check` : Vérifier plusieurs favoris
+- `GET /favorites` : (Client connecté) Liste des favoris du client.
+- `POST /favorites` : (Client connecté) Ajoute un produit aux favoris.
+- `DELETE /favorites/{product_id}` : (Client connecté) Retire un produit des favoris.
+- `GET /favorites/{product_id}` : (Client connecté) Vérifie si un produit spécifique est en favori.
+- `POST /favorites/check` : (Client connecté) Vérifie le statut de favori pour plusieurs produits.
 
 #### Réponses API
-- Succès : `{ status: 'success', data: ..., message: ... }`
+- Succès : `{ status: 'success', data: ..., message: ... }` (Codes HTTP: 200 OK, 201 Created, 204 No Content)
 - Erreur : `{ status: 'error', message: ..., errors: ... }`
 
 Voir `api/config/ApiResponse.php` pour le formatage des réponses.
