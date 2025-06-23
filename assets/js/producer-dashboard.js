@@ -49,7 +49,7 @@ const ProducerDashboard = {
         }
 
         // Listener for "Ajouter un produit" button to toggle form visibility
-        const addProductBtn = document.querySelector('#mes-produits button.bg-primary'); // More specific selector
+        const addProductBtn = document.querySelector('#mes-produits-content button.bg-primary'); // Sélecteur corrigé
         if (addProductBtn && addProductBtn.textContent.includes('Ajouter un produit')) {
             addProductBtn.addEventListener('click', () => {
                 const form = document.getElementById('product-form');
