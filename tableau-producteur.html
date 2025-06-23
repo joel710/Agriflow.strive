@@ -67,6 +67,13 @@
                     selectedTab.classList.remove('hover:bg-gray-700');
                     selectedContent.style.display = 'block';
                     selectedContent.classList.add('active');
+
+                    // Mettre à jour le titre de la barre latérale
+                    const sidebarTitle = document.getElementById('sidebar-title');
+                    const activeTabSpan = selectedTab.querySelector('span');
+                    if (sidebarTitle && activeTabSpan) {
+                        sidebarTitle.textContent = activeTabSpan.textContent;
+                    }
                 }
             }
 
@@ -192,7 +199,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
     <!-- Navbar -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -276,18 +283,18 @@
 
     <!-- ############################################## -->
     <!-- Ajouter cette section après le Hero Section existant -->
-    <section class="py-16 bg-white">
+    <section class="bg-white flex-1">
 
         <!-- Changed: Removed container mx-auto and px-4 to allow full width, added px-4 or sm:px-6 lg:px-8 for responsive padding directly on children or specific sections if needed -->
-        <div class="w-full max-w-full px-4 sm:px-6 lg:px-8">
+        <div class="w-full h-full">
             <!-- Dashboard Producteur -->
             <!-- Removed rounded-lg and shadow-xl from here to apply it potentially more locally or let content define it -->
-            <div class="bg-white overflow-hidden">
-                <div class="flex flex-col md:flex-row">
+            <div class="bg-white overflow-hidden h-full">
+                <div class="flex flex-col md:flex-row h-full">
                     <!-- Sidebar -->
-                    <div class="bg-gray-800 text-white p-4 md:w-64">
+                    <div class="bg-gray-800 text-white p-4 md:w-64 overflow-y-auto">
                         <div class="flex items-center mb-8">
-                            <span class="text-xl font-['Pacifico'] text-white">Agritech</span>
+                            <span id="sidebar-title" class="text-xl font-['Pacifico'] text-white">Agritech</span>
                         </div>
 
                         <nav class="space-y-2">
@@ -326,7 +333,9 @@
                     </div>
 
                     <!-- Main Content -->
+
                     <div class="flex-1 p-4 sm:p-6"> <!-- Adjusted padding for responsiveness -->
+
 
                         <!-- Section Tableau de bord -->
                         <div id="dashboard-content" class="dashboard-section tab-content active">
