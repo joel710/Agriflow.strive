@@ -79,18 +79,20 @@ class Auth
 
             // Ajout des infos de profil selon le rôle
             if ($user['role'] === 'producteur') {
-                $stmt = $this->pdo->prepare("SELECT farm_name, farm_photo_url FROM producers WHERE user_id = ?");
+                $stmt = $this->pdo->prepare("SELECT id as producer_profile_id, farm_name, farm_photo_url FROM producers WHERE user_id = ?");
                 $stmt->execute([$user['id']]);
                 $producer = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($producer) {
+                    $userData['producer_profile_id'] = $producer['producer_profile_id'];
                     $userData['farm_name'] = $producer['farm_name'];
                     $userData['farm_photo_url'] = $producer['farm_photo_url'];
                 }
             } else if ($user['role'] === 'client') {
-                $stmt = $this->pdo->prepare("SELECT delivery_address, food_preferences FROM customers WHERE user_id = ?");
+                $stmt = $this->pdo->prepare("SELECT id as customer_profile_id, delivery_address, food_preferences FROM customers WHERE user_id = ?");
                 $stmt->execute([$user['id']]);
                 $customer = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($customer) {
+                    $userData['customer_profile_id'] = $customer['customer_profile_id'];
                     $userData['delivery_address'] = $customer['delivery_address'];
                     $userData['food_preferences'] = $customer['food_preferences'];
                 }

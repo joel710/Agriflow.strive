@@ -82,27 +82,57 @@ class OrderController
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role'])) {
             ApiResponse::unauthorized(); return;
         }
-        $customer_id_filter = null;
-        if ($_SESSION['user_role'] === 'client') {
-            // Récupérer l'ID client de la table 'customers' basé sur 'users.id' de la session
-            $customerQuery = "SELECT id FROM customers WHERE user_id = :user_id_session LIMIT 1";
-            $stmtCust = $this->db->prepare($customerQuery);
-            $stmtCust->bindParam(':user_id_session', $_SESSION['user_id']);
-            $stmtCust->execute();
-            $customer_row = $stmtCust->fetch(PDO::FETCH_ASSOC);
-            if (!$customer_row) {
-                ApiResponse::success([]); // Ou une erreur si un client doit avoir un profil customer
-                return;
-            }
-            $customer_id_filter = $customer_row['id'];
-        } // Si admin/producteur, $customer_id_filter reste null pour tout voir (ou appliquer d'autres filtres)
+
+        $user_id = $_SESSION['user_id'];
+        $user_role = $_SESSION['user_role'];
+        $connected_producer_profile_id = $_SESSION['producer_profile_id'] ?? null;
+        $connected_customer_profile_id = $_SESSION['customer_profile_id'] ?? null;
 
         $filters = [];
-        if ($customer_id_filter) {
-            $filters['customer_id'] = $customer_id_filter;
+
+        if ($user_role === 'client') {
+            if ($connected_customer_profile_id) {
+                $filters['customer_id'] = $connected_customer_profile_id;
+            } else {
+                 ApiResponse::success(["items" => [], "pagination" => ["currentPage" => 1, "itemsPerPage" => 10, "totalItems" => 0, "totalPages" => 0]], "Profil client non trouvé pour l'utilisateur connecté.");
+                 return;
+            }
+        } elseif ($user_role === 'producteur') {
+            $producer_id_to_filter = null;
+            if (isset($_GET['producer_id'])) { // Un producteur demande explicitement pour un ID
+                if ($_GET['producer_id'] == $connected_producer_profile_id) {
+                    $producer_id_to_filter = (int)$_GET['producer_id'];
+                } else {
+                    // Un producteur essaie de voir les commandes d'un autre producteur
+                    ApiResponse::forbidden("Vous ne pouvez consulter que vos propres commandes de producteur.");
+                    return;
+                }
+            } else { // Par défaut, le producteur voit ses commandes
+                if ($connected_producer_profile_id) {
+                    $producer_id_to_filter = $connected_producer_profile_id;
+                } else {
+                    ApiResponse::error("Impossible de déterminer l'identifiant producteur pour filtrer les commandes.", 400);
+                    return;
+                }
+            }
+            $filters['producer_id'] = $producer_id_to_filter;
+
+        } elseif ($user_role === 'admin') {
+            // L'admin peut filtrer par customer_id ou producer_id s'ils sont dans GET
+            if (isset($_GET['customer_id'])) {
+                $filters['customer_id'] = (int)$_GET['customer_id'];
+            }
+            if (isset($_GET['producer_id'])) {
+                $filters['producer_id'] = (int)$_GET['producer_id'];
+            }
+            // Si aucun filtre, l'admin voit tout (limité par pagination)
+        } else {
+            ApiResponse::forbidden("Accès non autorisé pour lister les commandes.");
+            return;
         }
+
         if(isset($_GET['status'])) $filters['status'] = $_GET['status'];
-        // TODO: Pour producteur, filtrer les commandes contenant ses produits.
+        // Ajoutez d'autres filtres communs ici si nécessaire (ex: date range)
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
@@ -269,9 +299,18 @@ class OrderController
                 if (!$this->orderItem->create()) {
                     throw new Exception('Erreur lors de l\'ajout d\'un produit à la commande.');
                 }
-                // Décrémenter le stock (si la logique de stock est gérée ici)
-                // $updateStockQuery = "UPDATE products SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id";
-                // ...
+                // Décrémenter le stock
+                $updateStockQuery = "UPDATE products SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id AND stock_quantity >= :quantity_to_decrement";
+                $stmtUpdateStock = $this->db->prepare($updateStockQuery);
+                $stmtUpdateStock->bindParam(':quantity', $item_input->quantity, PDO::PARAM_INT);
+                $stmtUpdateStock->bindParam(':product_id', $item_input->product_id, PDO::PARAM_INT);
+                $stmtUpdateStock->bindParam(':quantity_to_decrement', $item_input->quantity, PDO::PARAM_INT); // Pour la condition
+
+                if (!$stmtUpdateStock->execute() || $stmtUpdateStock->rowCount() == 0) {
+                    // Soit l'exécution a échoué, soit le stock était insuffisant (rowCount == 0 à cause de la condition stock_quantity >= quantity)
+                    // La vérification initiale de stock_quantity devrait déjà attraper ça, mais c'est une double sécurité.
+                    throw new Exception("Impossible de mettre à jour le stock pour le produit ID " . $item_input->product_id . ". Le stock pourrait être devenu insuffisant.");
+                }
             }
             $this->db->commit();
             ApiResponse::created(['order_id' => $order_id, 'total_amount' => $this->order->total_amount], 'Commande créée avec succès.');
@@ -371,6 +410,8 @@ class OrderController
             ApiResponse::badRequest('La commande ne peut plus être annulée à ce stade.');
         } elseif ($cancel_result === "invalid_role") {
              ApiResponse::forbidden('Rôle non valide pour cette action.');
+        } elseif ($cancel_result === "restock_failed") {
+            ApiResponse::error('La commande a été annulée, mais une erreur est survenue lors de la réintégration du stock. Veuillez contacter le support.', 500);
         }
         else {
             ApiResponse::error('Impossible d\'annuler la commande (elle n\'existe peut-être pas ou une autre erreur).', 500);

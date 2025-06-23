@@ -19,10 +19,23 @@ class DeliveryController
         // $this->user = new User($this->db); // Supposant qu'un modèle User existe
     }
 
+    private function getConnectedCustomerId() {
+        if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'client') {
+            return null;
+        }
+        $customerQuery = "SELECT id FROM customers WHERE user_id = :user_id_session LIMIT 1";
+        $stmtCust = $this->db->prepare($customerQuery);
+        $stmtCust->bindParam(':user_id_session', $_SESSION['user_id']);
+        $stmtCust->execute();
+        $customer_row = $stmtCust->fetch(PDO::FETCH_ASSOC);
+        return $customer_row ? (int)$customer_row['id'] : null;
+    }
+
     // POST /deliveries
     public function createDelivery() {
         if (!isset($_SESSION['user_id'])) {
-            echo ApiResponse::unauthorized("Accès non autorisé. Veuillez vous connecter.");
+            // ApiResponse::unauthorized est une méthode statique, donc pas besoin de echo.
+            ApiResponse::unauthorized("Accès non autorisé. Veuillez vous connecter.");
             return;
         }
         // Idéalement, vérifier le rôle de l'utilisateur ici (ex: producteur ou admin)
@@ -120,23 +133,90 @@ class DeliveryController
         }
     }
 
-    // GET /deliveries (Nouvelle méthode pour lister toutes les livraisons, ou celles d'un client si non admin)
+    // GET /deliveries (Liste les livraisons pour client, producteur ou admin)
     public function getAllOrCustomerDeliveries() {
-        if (!isset($_SESSION['user_id'])) {
-            echo ApiResponse::unauthorized();
+        if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role'])) {
+            ApiResponse::unauthorized(); return;
+        }
+
+        $user_role = $_SESSION['user_role'];
+        $connected_customer_profile_id = $this->getConnectedCustomerId(); // Peut être null si pas client
+        $connected_producer_profile_id = $_SESSION['producer_profile_id'] ?? null;
+
+        $filters = [];
+
+        if ($user_role === 'client') {
+            if ($connected_customer_profile_id) {
+                $filters['customer_id'] = $connected_customer_profile_id;
+            } else {
+                 ApiResponse::success(["items" => [], "pagination" => ["currentPage" => 1, "itemsPerPage" => 10, "totalItems" => 0, "totalPages" => 0]], "Profil client non trouvé.");
+                 return;
+            }
+        } elseif ($user_role === 'producteur') {
+            $producer_id_to_filter = null;
+            if (isset($_GET['producer_id'])) {
+                if ($_GET['producer_id'] == $connected_producer_profile_id) {
+                    $producer_id_to_filter = (int)$_GET['producer_id'];
+                } else {
+                    ApiResponse::forbidden("Vous ne pouvez consulter que les livraisons liées à vos produits.");
+                    return;
+                }
+            } else {
+                if ($connected_producer_profile_id) {
+                    $producer_id_to_filter = $connected_producer_profile_id;
+                } else {
+                    ApiResponse::error("ID Producteur non trouvé pour filtrer les livraisons.", 400);
+                    return;
+                }
+            }
+            $filters['producer_id'] = $producer_id_to_filter;
+        } elseif ($user_role === 'admin') {
+            if (isset($_GET['customer_id'])) {
+                $filters['customer_id'] = (int)$_GET['customer_id'];
+            }
+            if (isset($_GET['producer_id'])) {
+                $filters['producer_id'] = (int)$_GET['producer_id'];
+            }
+        } else {
+            ApiResponse::forbidden("Accès non autorisé pour lister les livraisons.");
             return;
         }
 
-        // Idéalement, vérifier le rôle ici.
-        // Si admin ou producteur -> appeler $this->delivery->readAll()
-        // Sinon (client) -> appeler $this->delivery->getCustomerDeliveries()
-        // Pour l'instant, on va séparer la logique :
-        // GET /deliveries reste pour getCustomerDeliveries (comportement original)
-        // Une nouvelle route GET /admin/deliveries pourrait utiliser readAll (non implémenté dans ce commit)
-        // OU on modifie celle-ci pour être plus intelligente.
-        // Pour l'instant, on garde le comportement client par défaut pour /deliveries.
-        // La méthode readAll du modèle est prête pour une utilisation admin/producteur.
-        $this->getCustomerDeliveries();
+        if(isset($_GET['status'])) $filters['status'] = $_GET['status'];
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+
+        try {
+            $stmt = $this->delivery->readAll($filters, $page, $per_page);
+            $deliveries_arr = ["items" => []];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $delivery_item = [
+                    'id' => (int)$row['id'],
+                    'order_id' => (int)$row['order_id'],
+                    'customer_id' => (int)$row['customer_id'], // ID de la table customers
+                    'customer_email' => $row['customer_email'] ?? null,
+                    'status' => $row['status'],
+                    'tracking_number' => $row['tracking_number'],
+                    'estimated_delivery_date' => $row['estimated_delivery_date'],
+                    'actual_delivery_date' => $row['actual_delivery_date'],
+                    'delivery_person_name' => $row['delivery_person_name'],
+                    'delivery_person_phone' => $row['delivery_person_phone'],
+                    'order_delivery_address' => $row['order_delivery_address'],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at']
+                ];
+                array_push($deliveries_arr["items"], $delivery_item);
+            }
+            $total_items = $this->delivery->countAll($filters);
+            $deliveries_arr["pagination"] = [
+                "currentPage" => $page, "itemsPerPage" => $per_page,
+                "totalItems" => (int)$total_items, "totalPages" => ceil($total_items / $per_page)
+            ];
+            ApiResponse::success($deliveries_arr);
+        } catch (Exception $e) {
+            ApiResponse::error($e->getMessage());
+        }
     }
 
 
@@ -231,8 +311,14 @@ class DeliveryController
     // Obtenir l'historique des livraisons d'un client (Endpoint original GET /deliveries)
     public function getCustomerDeliveries()
     {
-        if (!isset($_SESSION['user_id'])) {
-            echo ApiResponse::unauthorized();
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'client') {
+            ApiResponse::unauthorized("Accès réservé aux clients.");
+            return;
+        }
+
+        $actual_customer_id = $this->getConnectedCustomerId();
+        if (!$actual_customer_id) {
+            ApiResponse::notFound("Profil client non trouvé pour l'utilisateur connecté.");
             return;
         }
 
@@ -240,34 +326,7 @@ class DeliveryController
         $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
 
         try {
-            // Utiliser l'ID de l'utilisateur connecté comme customer_id
-            $customer_id_from_session = $_SESSION['user_id'];
-            // Attention: user_id dans la session est l'id de la table users.
-            // La table orders a un customer_id qui est un FK vers la table customers (qui a un user_id).
-            // Il faut s'assurer que la session 'user_id' correspond bien à l'attente de getCustomerDeliveries.
-            // Si getCustomerDeliveries attend un 'customers.id', il faut une jointure ou une recherche préalable.
-            // Le modèle actuel `Delivery->getCustomerDeliveries` utilise `o.customer_id` qui est `orders.customer_id`.
-            // Si `$_SESSION['user_id']` est `users.id`, il faut d'abord trouver le `customers.id` correspondant.
-            // Pour cet exercice, on va supposer que `$_SESSION['user_id']` est directement utilisable
-            // ou que la logique de session stocke le `customers.id` si le rôle est client.
-            // Pour une application réelle, il faudrait clarifier cela.
-            // Si `$_SESSION['user_id']` est l'ID de la table `users`, et que le rôle est `client`,
-            // il faudrait récupérer l'entrée correspondante dans la table `customers`.
-            // $customer = $this->getCustomerByUserId($_SESSION['user_id']);
-            // $actual_customer_id = $customer ? $customer['id'] : null;
-            // if (!$actual_customer_id) {
-            //     echo ApiResponse::notFound("Profil client non trouvé pour cet utilisateur.");
-            //     return;
-            // }
-            // $stmt = $this->delivery->getCustomerDeliveries($actual_customer_id, $page, $per_page);
-
-            // Pour l'instant, on assume que $_SESSION['user_id'] est ce que getCustomerDeliveries attend.
-            // La documentation indique que getCustomerDeliveries prend un customer_id.
-            // Le modèle Delivery.php dans sa méthode getCustomerDeliveries fait: `WHERE o.customer_id = :customer_id`
-            // orders.customer_id est une FK vers customers.id.
-            // Donc, $_SESSION['user_id'] devrait être l'ID de la table `customers` pour un client.
-            // Ceci est une simplification pour le moment. Une gestion d'identité plus robuste est nécessaire.
-            $stmt = $this->delivery->getCustomerDeliveries($_SESSION['user_id'], $page, $per_page);
+            $stmt = $this->delivery->getCustomerDeliveries($actual_customer_id, $page, $per_page);
             $deliveries = [];
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -297,15 +356,19 @@ class DeliveryController
     // Obtenir les statistiques de livraison d'un client
     public function getDeliveryStats()
     {
-        if (!isset($_SESSION['user_id'])) {
-            echo ApiResponse::unauthorized();
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'client') {
+            ApiResponse::unauthorized("Accès réservé aux clients.");
             return;
         }
-        // Mêmes considérations pour $_SESSION['user_id'] que dans getCustomerDeliveries
-        // $actual_customer_id = $this->getActualCustomerIdForSession(); if (!$actual_customer_id) return;
+
+        $actual_customer_id = $this->getConnectedCustomerId();
+        if (!$actual_customer_id) {
+            ApiResponse::notFound("Profil client non trouvé pour l'utilisateur connecté.");
+            return;
+        }
 
         try {
-            $stats = $this->delivery->getCustomerStats($_SESSION['user_id']); // Utiliser $actual_customer_id ici
+            $stats = $this->delivery->getCustomerStats($actual_customer_id);
 
             if ($stats) {
                 if ($stats['avg_delivery_time'] !== null) {
