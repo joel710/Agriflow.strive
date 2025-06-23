@@ -8,6 +8,7 @@ const ProducerDashboard = {
         deliveries: [],
         stats: {},
         salesChartInstance: null,
+        editingProductId: null, // Pour stocker l'ID du produit en cours de modification
         // productsChartInstance: null, // If we add a products chart later
     },
 
@@ -38,7 +39,7 @@ const ProducerDashboard = {
             if (saveProductButton) {
                 saveProductButton.addEventListener('click', (e) => {
                     e.preventDefault();
-                    this.handleAddProduct();
+                    this.handleFormSubmit(); // Nouvelle fonction de dispatch
                 });
             } else {
                 console.warn("Save product button not found");
@@ -75,6 +76,14 @@ const ProducerDashboard = {
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
+        }
+    },
+
+    handleFormSubmit() {
+        if (this.state.editingProductId) {
+            this.handleUpdateProductInternal();
+        } else {
+            this.handleAddProductInternal();
         }
     },
 
@@ -219,18 +228,62 @@ const ProducerDashboard = {
         }
     },
 
-    async handleAddProduct() {
-        const name = document.getElementById('product-name').value;
-        const category = document.getElementById('product-category').value; // Assuming this is a text or ID
-        const price = document.getElementById('product-price').value;
-        // const unit = document.getElementById('product-unit').value; // If unit field is added
-        const quantity = document.getElementById('product-quantity-value').value; // Renamed for clarity if it's a value
-        const description = document.getElementById('product-description').value;
-        const imageFile = document.getElementById('product-image-file').files[0]; // Assuming input type file with id 'product-image-file'
+    async editProduct(productId) {
+        console.log(`Editing product ID: ${productId}`);
+        try {
+            const response = await fetch(`/agriflow/api/products/${productId}`);
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({ message: response.statusText }));
+                throw new Error(`Erreur HTTP ${response.status}: ${err.message}`);
+            }
+            const product = await response.json();
+            if (product.status === 'success' && product.data) {
+                const productData = product.data;
+                // Pré-remplir le formulaire
+                document.getElementById('product-name').value = productData.name || '';
+                document.getElementById('product-category').value = productData.category || '';
+                document.getElementById('product-price').value = productData.price || '';
+                document.getElementById('product-unit').value = productData.unit || '';
+                document.getElementById('product-quantity-value').value = productData.stock_quantity || '';
+                document.getElementById('product-description').value = productData.description || '';
+                // Pour l'image, on ne peut pas pré-remplir un <input type="file"> pour des raisons de sécurité.
+                // On pourrait afficher l'image actuelle à côté.
+                const imagePreview = document.getElementById('product-image-preview'); // Supposons qu'un tel élément existe ou sera ajouté
+                if (imagePreview && productData.image_url) {
+                    imagePreview.src = `/agriflow/${productData.image_url}`; // Adapter le chemin si nécessaire
+                    imagePreview.style.display = 'block';
+                } else if (imagePreview) {
+                    imagePreview.style.display = 'none';
+                }
 
-        // Basic validation
-        if (!name || !price || !quantity) {
-            alert('Nom, prix et quantité sont requis.');
+
+                this.state.editingProductId = productId;
+                document.getElementById('save-product-button').textContent = 'Modifier le produit';
+                document.getElementById('product-form').classList.remove('hidden');
+                document.getElementById('product-name').focus(); // Mettre le focus sur le premier champ
+            } else {
+                alert(`Impossible de récupérer les détails du produit: ${product.message || 'Format de réponse incorrect.'}`);
+            }
+        } catch (error) {
+            console.error('Error fetching product for edit:', error);
+            alert(`Une erreur est survenue lors de la récupération du produit: ${error.message}`);
+        }
+    },
+
+    async handleUpdateProductInternal() {
+        if (!this.state.editingProductId) return;
+
+        const productId = this.state.editingProductId;
+        const name = document.getElementById('product-name').value;
+        const category = document.getElementById('product-category').value;
+        const price = document.getElementById('product-price').value;
+        const unit = document.getElementById('product-unit').value;
+        const quantity = document.getElementById('product-quantity-value').value;
+        const description = document.getElementById('product-description').value;
+        const imageFile = document.getElementById('product-image-file').files[0]; // Peut être undefined si pas de nouvelle image
+
+        if (!name || !category || !price || !unit || !quantity) {
+            alert('Nom, catégorie, prix, unité et quantité sont requis pour la modification.');
             return;
         }
 
@@ -238,47 +291,110 @@ const ProducerDashboard = {
         formData.append('name', name);
         formData.append('category', category);
         formData.append('price', parseFloat(price));
-        // formData.append('unit', unit);
+        formData.append('unit', unit);
+        formData.append('stock_quantity', parseInt(quantity));
+        formData.append('description', description);
+        if (imageFile) { // N'ajouter l'image que si une nouvelle a été sélectionnée
+            formData.append('image', imageFile);
+        }
+        // Il faut aussi envoyer les autres champs comme is_bio, is_available si gérés
+        // formData.append('_method', 'PUT'); // Si le backend est configuré pour utiliser _method avec POST
+
+        console.log(`Updating product ID: ${productId} with FormData:`, Object.fromEntries(formData));
+
+        try {
+            // Utiliser POST car FormData avec PUT peut être problématique et notre API route POST vers updateProduct
+            const response = await fetch(`/agriflow/api/products/${productId}`, {
+                method: 'POST', // Ou PUT si le backend gère bien FormData avec PUT et que le client l'envoie correctement
+                body: formData,
+                // headers: { 'Authorization': `Bearer ${this.getAuthToken()}` }
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 'success') {
+                alert(result.message || 'Produit modifié avec succès!');
+                document.getElementById('product-form-html').reset();
+                const imagePreview = document.getElementById('product-image-preview');
+                if (imagePreview) imagePreview.style.display = 'none';
+                document.getElementById('product-form').classList.add('hidden');
+                document.getElementById('save-product-button').textContent = 'Enregistrer';
+                this.state.editingProductId = null;
+                this.fetchProducts();
+            } else {
+                console.error('Failed to update product:', result.message, result.errors);
+                let errorMessage = result.message || `Erreur HTTP: ${response.status}`;
+                if (result.errors) errorMessage += "\nDétails: " + JSON.stringify(result.errors);
+                alert(`Erreur lors de la modification du produit: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error updating product:', error);
+            alert('Une erreur réseau ou une exception JavaScript est survenue lors de la modification du produit.');
+        }
+    },
+
+    async handleAddProductInternal() { // Renommée
+        const name = document.getElementById('product-name').value;
+        const category = document.getElementById('product-category').value;
+        const price = document.getElementById('product-price').value;
+        const unit = document.getElementById('product-unit').value; // Décommenté et lu
+        const quantity = document.getElementById('product-quantity-value').value;
+        const description = document.getElementById('product-description').value;
+        const imageFile = document.getElementById('product-image-file').files[0];
+
+        // Basic validation - ajout de unit et category pour la validation si nécessaire
+        if (!name || !price || !quantity || !unit || !category) {
+            alert('Nom, catégorie, prix, unité et quantité sont requis.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('category', category);
+        formData.append('price', parseFloat(price));
+        formData.append('unit', unit); // Ajouté au FormData
         formData.append('stock_quantity', parseInt(quantity));
         formData.append('description', description);
         if (imageFile) {
-            formData.append('image', imageFile);
+            formData.append('image', imageFile); // 'image' est le nom attendu par le backend pour $_FILES['image']
         }
+        // Ajouter is_bio et is_available si ces champs existent dans le formulaire HTML
+        // Exemple:
+        // const isBioCheckbox = document.getElementById('product-is-bio');
+        // if (isBioCheckbox) formData.append('is_bio', isBioCheckbox.checked);
 
-        // HYPOTHETICAL ENDPOINT: POST /api/producer/products
-        // Body: FormData with product details
-        // Expected response:
-        // { status: "success", data: { newProductDetails }, message: "Produit ajouté" }
-        // or { status: "error", message: "...", errors: { field: "message" } }
-        console.log("Adding product...", Object.fromEntries(formData));
+
+        console.log("Adding product with FormData:", Object.fromEntries(formData));
+
         try {
-            // const response = await fetch('/api/producer/products', {
-            //     method: 'POST',
-            //     body: formData,
-            //     // headers: { 'Authorization': `Bearer ${this.getAuthToken()}` } // If token auth is used
-            // });
-            // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            // const result = await response.json();
+            const response = await fetch('/agriflow/api/products', { // Endpoint corrigé
+                method: 'POST',
+                body: formData,
+                // Les headers pour FormData sont généralement définis automatiquement par le navigateur,
+                // y compris le Content-Type: multipart/form-data; boundary=...
+                // Ne pas mettre 'Content-Type': 'application/json' pour FormData.
+                // headers: { 'Authorization': `Bearer ${this.getAuthToken()}` } // Si authentification par token
+            });
 
-            // if (result.status === 'success') {
-            //     alert(result.message || 'Produit ajouté avec succès!');
-            //     document.getElementById('product-form').classList.add('hidden'); // Hide form
-            //     document.getElementById('product-form').reset(); // Reset form fields
-            //     this.fetchProducts(); // Refresh product list
-            // } else {
-            //     console.error('Failed to add product:', result.message, result.errors);
-            //     alert(`Erreur: ${result.message}`);
-            // }
-            // --- MOCK SUCCESS ---
-            alert('Produit ajouté avec succès (Simulation)!');
-            document.getElementById('product-form-html').reset(); // Assuming form has id 'product-form-html'
-            document.getElementById('product-form').classList.add('hidden');
-            this.fetchProducts(); // To show it in the list (mock will just refetch same data)
-            console.log("Mock product added.");
-            // --- END MOCK ---
+            // Tenter de lire la réponse comme JSON, même si ce n'est pas ok, pour avoir le message d'erreur du backend
+            const result = await response.json();
+
+            if (response.ok && result.status === 'success') {
+                alert(result.message || 'Produit ajouté avec succès!');
+                document.getElementById('product-form-html').reset(); // ID du formulaire
+                document.getElementById('product-form').classList.add('hidden'); // Cacher la section formulaire
+                this.fetchProducts(); // Rafraîchir la liste des produits
+            } else {
+                console.error('Failed to add product:', result.message, result.errors);
+                let errorMessage = result.message || `Erreur HTTP: ${response.status}`;
+                if (result.errors) {
+                    errorMessage += "\nDétails: " + JSON.stringify(result.errors);
+                }
+                alert(`Erreur lors de l'ajout du produit: ${errorMessage}`);
+            }
         } catch (error) {
             console.error('Error adding product:', error);
-            alert('Une erreur est survenue lors de l\'ajout du produit.');
+            alert('Une erreur réseau ou une exception JavaScript est survenue lors de l\'ajout du produit.');
         }
     },
 
@@ -611,22 +727,35 @@ const ProducerDashboard = {
          // 4. Change form submission to call an updateProduct(productId) method
          // 5. Show the form
     },
-    deleteProduct(productId) {
+    async deleteProduct(productId) { // Ajout de async
         console.log(`Deleting product ID: ${productId}`);
         if (confirm(`Voulez-vous vraiment supprimer le produit ID ${productId}?`)) {
-            // HYPOTHETICAL ENDPOINT: DELETE /api/producer/products/${productId}
-            // try {
-            //    const response = await fetch(`/api/producer/products/${productId}`, { method: 'DELETE' });
-            //    if (response.ok) {
-            //        alert('Produit supprimé!');
-            //        this.fetchProducts(); // Refresh list
-            //    } else {
-            //        const err = await response.json();
-            //        alert(`Erreur: ${err.message}`);
-            //    }
-            // } catch (e) { console.error(e); alert('Erreur suppression.');}
-            alert(`Produit ${productId} supprimé (Simulation)!`);
-            this.fetchProducts(); // Refresh (mock)
+            try {
+                const response = await fetch(`/agriflow/api/products/${productId}`, {
+                    method: 'DELETE',
+                    // headers: { 'Authorization': `Bearer ${this.getAuthToken()}` } // Si authentification par token
+                });
+
+                if (response.ok) { // Statut 200-299, inclut 204 No Content pour DELETE réussi
+                    // Pour une réponse 204, response.json() causerait une erreur car le corps est vide.
+                    // On peut vérifier le statut explicitement.
+                    if (response.status === 204) {
+                        alert('Produit supprimé avec succès!');
+                    } else {
+                        // Si on attendait un JSON avec un message de succès (pas typique pour 204)
+                        const result = await response.json().catch(() => null); // Gérer le cas où il n'y a pas de JSON
+                        alert(result?.message || 'Produit supprimé avec succès!');
+                    }
+                    this.fetchProducts(); // Rafraîchir la liste des produits
+                } else {
+                    const result = await response.json().catch(() => null); // Essayer de parser l'erreur JSON
+                    console.error('Failed to delete product:', result?.message || response.statusText);
+                    alert(`Erreur lors de la suppression du produit: ${result?.message || response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('Une erreur réseau ou une exception JavaScript est survenue lors de la suppression du produit.');
+            }
         }
     },
     viewDeliveryDetails(deliveryId){
@@ -639,3 +768,168 @@ const ProducerDashboard = {
 document.addEventListener('DOMContentLoaded', () => {
     ProducerDashboard.init();
 });
+
+// --- Fonctions pour la section Paramètres ---
+
+ProducerDashboard.loadProducerProfileSettings = async function() {
+    console.log("Loading producer profile settings...");
+    try {
+        const response = await fetch('/agriflow/api/producers/my-profile');
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({ message: response.statusText }));
+            throw new Error(`Erreur HTTP ${response.status}: ${err.message}`);
+        }
+        const result = await response.json();
+        if (result.status === 'success' && result.data) {
+            const profileData = result.data;
+            document.getElementById('settings-farm-name').value = profileData.farm_name || '';
+            document.getElementById('settings-description').value = profileData.farm_description || ''; // farm_description dans le modèle Producer
+            document.getElementById('settings-address').value = profileData.farm_address || ''; // farm_address dans le modèle Producer
+            document.getElementById('settings-phone').value = profileData.phone_number || ''; // Ce champ n'est pas dans ProducerModel, peut-être dans UserModel?
+            // Si phone_number est dans User, il faudrait un autre appel ou joindre les données.
+            // Pour l'instant, on suppose qu'il pourrait être dans producer profile ou qu'on l'ajoute.
+            // Le modèle Producer a farm_photo_url, pas profile_picture_url.
+            document.getElementById('settings-profile-picture').value = profileData.farm_photo_url || '';
+
+            const imgPreview = document.getElementById('settings-profile-preview');
+            if (profileData.farm_photo_url) {
+                imgPreview.src = profileData.farm_photo_url; // Supposant que c'est une URL absolue ou gérée correctement
+                imgPreview.classList.remove('hidden');
+            } else {
+                imgPreview.src = '#';
+                imgPreview.classList.add('hidden');
+            }
+        } else {
+            console.error("Failed to load producer profile settings:", result.message);
+            alert("Impossible de charger les informations du profil producteur.");
+        }
+    } catch (error) {
+        console.error('Error fetching producer profile settings:', error);
+        alert(`Une erreur est survenue: ${error.message}`);
+    }
+};
+
+ProducerDashboard.handleSaveProducerProfile = async function(event) {
+    event.preventDefault();
+    console.log("Saving producer profile...");
+
+    const farmName = document.getElementById('settings-farm-name').value;
+    const description = document.getElementById('settings-description').value;
+    const address = document.getElementById('settings-address').value;
+    const phone = document.getElementById('settings-phone').value; // À voir où stocker ce champ
+    const profilePictureUrl = document.getElementById('settings-profile-picture').value;
+
+    const dataToUpdate = {
+        farm_name: farmName,
+        farm_description: description,
+        farm_address: address,
+        // phone_number: phone, // Si on décide de le stocker dans le profil producteur
+        farm_photo_url: profilePictureUrl
+        // Ajouter d'autres champs du ProducerModel si nécessaire (siret, experience_years, etc.)
+    };
+
+    try {
+        const response = await fetch('/agriflow/api/producers/my-profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataToUpdate)
+        });
+        const result = await response.json();
+        if (response.ok && result.status === 'success') {
+            alert(result.message || "Profil mis à jour avec succès!");
+            // Mettre à jour le nom de la ferme dans la navbar si changé
+            if (dataToUpdate.farm_name && document.getElementById('farm-name')) {
+                 document.getElementById('farm-name').textContent = dataToUpdate.farm_name;
+            }
+             if (dataToUpdate.farm_name && document.getElementById('mobile-farm-name')) {
+                 document.getElementById('mobile-farm-name').textContent = dataToUpdate.farm_name;
+            }
+        } else {
+            console.error("Failed to save producer profile:", result.message);
+            alert(`Erreur lors de la sauvegarde du profil: ${result.message || response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error saving producer profile:', error);
+        alert(`Une erreur réseau ou JavaScript est survenue: ${error.message}`);
+    }
+};
+
+ProducerDashboard.handleChangePassword = async function(event) {
+    event.preventDefault();
+    console.log("Changing password...");
+
+    const currentPassword = document.getElementById('settings-current-password').value;
+    const newPassword = document.getElementById('settings-new-password').value;
+    const confirmPassword = document.getElementById('settings-confirm-password').value;
+
+    if (newPassword !== confirmPassword) {
+        alert("Le nouveau mot de passe et sa confirmation ne correspondent pas.");
+        return;
+    }
+    if (newPassword.length < 6) {
+        alert("Le nouveau mot de passe doit contenir au moins 6 caractères.");
+        return;
+    }
+
+    const data = {
+        current_password: currentPassword,
+        new_password: newPassword,
+        confirm_new_password: confirmPassword // Le backend s'attend à confirm_new_password
+    };
+
+    try {
+        const response = await fetch('/agriflow/api/users/me/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (response.ok && result.status === 'success') {
+            alert(result.message || "Mot de passe changé avec succès!");
+            document.getElementById('change-password-form').reset();
+        } else {
+            console.error("Failed to change password:", result.message);
+            alert(`Erreur lors du changement de mot de passe: ${result.message || response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        alert(`Une erreur réseau ou JavaScript est survenue: ${error.message}`);
+    }
+};
+
+
+// Modification de bindEvents pour ajouter les listeners des formulaires de paramètres
+// et pour charger les données quand l'onglet est activé.
+const originalBindEvents = ProducerDashboard.bindEvents;
+ProducerDashboard.bindEvents = function() {
+    originalBindEvents.call(this); // Appelle la fonction bindEvents originale
+
+    const producerProfileForm = document.getElementById('producer-profile-form');
+    if (producerProfileForm) {
+        producerProfileForm.addEventListener('submit', this.handleSaveProducerProfile.bind(this));
+    }
+
+    const changePasswordForm = document.getElementById('change-password-form');
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', this.handleChangePassword.bind(this));
+    }
+
+    // Charger les données du profil producteur lorsque l'onglet Paramètres est activé
+    const settingsTab = document.querySelector('.nav-tab[data-target="parametres"]');
+    if (settingsTab) {
+        settingsTab.addEventListener('click', () => {
+            // S'assurer que l'onglet est bien actif avant de charger (au cas où le clic est intercepté)
+            // La logique d'activation d'onglet est dans tableau-producteur.html, elle devrait fonctionner avant.
+            // Un petit délai peut aider si l'activation est asynchrone (peu probable ici)
+            setTimeout(() => {
+                if (document.getElementById('parametres-content').classList.contains('active')) {
+                    this.loadProducerProfileSettings();
+                }
+            }, 0);
+        });
+    }
+     // Gérer le cas où l'onglet paramètres est déjà actif au chargement de la page (si implémenté)
+    if (document.getElementById('parametres-content') && document.getElementById('parametres-content').classList.contains('active')) {
+        this.loadProducerProfileSettings();
+    }
+};
