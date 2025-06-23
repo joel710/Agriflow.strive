@@ -67,12 +67,13 @@ class Order
     public function readAll($filters = [], $page = 1, $per_page = 10)
     {
         $offset = ($page - 1) * $per_page;
-        $query = "SELECT o.*, 
-                    COUNT(oi.id) as items_count,
-                    d.id as delivery_id, d.status as delivery_status, d.estimated_delivery_date
-                FROM " . $this->table_name . " o
-                LEFT JOIN order_items oi ON o.id = oi.order_id
-                LEFT JOIN deliveries d ON o.id = d.order_id";
+        $select_part = "SELECT DISTINCT o.*,
+                        COUNT(DISTINCT oi.id) as items_count,
+                        d.id as delivery_id, d.status as delivery_status, d.estimated_delivery_date";
+
+        $from_part = " FROM " . $this->table_name . " o
+                       LEFT JOIN order_items oi ON o.id = oi.order_id
+                       LEFT JOIN deliveries d ON o.id = d.order_id";
 
         $where_clauses = [];
         $params = [];
@@ -85,8 +86,14 @@ class Order
             $where_clauses[] = "o.status = :status";
             $params[':status'] = $filters['status'];
         }
-        // TODO: Ajouter filtre par producer_id (nécessite jointure avec order_items puis products)
+        if (!empty($filters['producer_id'])) {
+            // Jointure supplémentaire pour filtrer par producer_id
+            $from_part .= " LEFT JOIN products p ON oi.product_id = p.id";
+            $where_clauses[] = "p.producer_id = :producer_id";
+            $params[':producer_id'] = $filters['producer_id'];
+        }
 
+        $query = $select_part . $from_part;
         if (count($where_clauses) > 0) {
             $query .= " WHERE " . implode(" AND ", $where_clauses);
         }
@@ -107,12 +114,12 @@ class Order
 
     // Compter les commandes (avec filtres)
     public function countAll($filters = []) {
-        $query = "SELECT COUNT(DISTINCT o.id) as total_rows
-                  FROM " . $this->table_name . " o ";
-        // Si on filtre par producteur, il faudra joindre différemment.
-        // Pour l'instant, on garde les filtres simples.
+        $select_part = "SELECT COUNT(DISTINCT o.id) as total_rows";
+        $from_part = " FROM " . $this->table_name . " o ";
+
         $where_clauses = [];
         $params = [];
+
         if (!empty($filters['customer_id'])) {
             $where_clauses[] = "o.customer_id = :customer_id";
             $params[':customer_id'] = $filters['customer_id'];
@@ -121,9 +128,21 @@ class Order
             $where_clauses[] = "o.status = :status";
             $params[':status'] = $filters['status'];
         }
+        if (!empty($filters['producer_id'])) {
+            // Jointure supplémentaire pour filtrer par producer_id
+            // Note: Pour COUNT DISTINCT o.id, la jointure avec order_items doit être présente
+            // si producer_id est un filtre, pour s'assurer que la commande contient bien un produit du producteur.
+            $from_part .= " LEFT JOIN order_items oi_count ON o.id = oi_count.order_id
+                            LEFT JOIN products p_count ON oi_count.product_id = p_count.id";
+            $where_clauses[] = "p_count.producer_id = :producer_id";
+            $params[':producer_id'] = $filters['producer_id'];
+        }
+
+        $query = $select_part . $from_part;
         if (count($where_clauses) > 0) {
             $query .= " WHERE " . implode(" AND ", $where_clauses);
         }
+
         $stmt = $this->conn->prepare($query);
         foreach ($params as $key => &$val) {
             $stmt->bindParam($key, $val);
@@ -289,13 +308,51 @@ class Order
                 WHERE id = :id";
         // La condition sur customer_id est retirée, la permission est gérée avant.
 
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":id", $this->id);
+        try {
+            $this->conn->beginTransaction();
 
-        if ($stmt->execute()) {
-            return $stmt->rowCount() > 0;
+            // Récupérer les items de la commande AVANT de l'annuler pour réintégrer les stocks
+            $items_stmt = $this->getOrderItems(); // Utilise $this->id qui est déjà setté
+            $items_to_restock = [];
+            while($item_row = $items_stmt->fetch(PDO::FETCH_ASSOC)) {
+                $items_to_restock[] = $item_row;
+            }
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":id", $this->id);
+
+            if (!$stmt->execute() || $stmt->rowCount() == 0) {
+                $this->conn->rollBack();
+                error_log("Order::cancel() - Failed to update order status for order ID: " . $this->id);
+                return false; // La mise à jour du statut de la commande a échoué
+            }
+
+            // Réintégrer le stock pour chaque produit
+            // On ne réintègre que si la commande n'était pas déjà 'livree' ou 'annulee' avant cette annulation.
+            // La logique de permission $this->status (chargé par readOne) nous donne le statut *avant* cette annulation.
+            if (!in_array($this->status, ['livree'])) { // Ne pas restocker si déjà livrée. 'annulee' est déjà géré par la logique de permission.
+                foreach ($items_to_restock as $item) {
+                    $update_stock_query = "UPDATE products SET stock_quantity = stock_quantity + :quantity WHERE id = :product_id";
+                    $stmt_stock = $this->conn->prepare($update_stock_query);
+                    $stmt_stock->bindParam(':quantity', $item['quantity'], PDO::PARAM_INT);
+                    $stmt_stock->bindParam(':product_id', $item['product_id'], PDO::PARAM_INT);
+                    if (!$stmt_stock->execute()) {
+                        // Si la mise à jour du stock échoue, on rollback.
+                        $this->conn->rollBack();
+                        error_log("Order::cancel() - Failed to restock product ID: " . $item['product_id'] . " for order ID: " . $this->id);
+                        return "restock_failed"; // Erreur spécifique
+                    }
+                }
+            }
+
+            $this->conn->commit();
+            return true; // Succès
+
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            error_log("Order::cancel() - Exception: " . $e->getMessage());
+            return false;
         }
-        return false;
     }
 
     // Obtenir les statistiques des commandes d'un client

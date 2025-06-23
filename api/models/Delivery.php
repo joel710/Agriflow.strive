@@ -122,23 +122,86 @@ class Delivery
     // Pourrait être paginée et filtrée
     public function readAll($filters = [], $page = 1, $per_page = 10) {
         $offset = ($page - 1) * $per_page;
-        $query = "SELECT d.*, o.customer_id, o.delivery_address
-                  FROM " . $this->table_name . " d
-                  LEFT JOIN orders o ON d.order_id = o.id";
 
-        // TODO: Ajouter la logique de filtres ici si nécessaire
-        // Par exemple: WHERE d.status = :status
+        $select_part = "SELECT DISTINCT d.*, o.customer_id, o.delivery_address as order_delivery_address, u.email as customer_email";
+        $from_part = " FROM " . $this->table_name . " d
+                       LEFT JOIN orders o ON d.order_id = o.id
+                       LEFT JOIN customers c ON o.customer_id = c.id
+                       LEFT JOIN users u ON c.user_id = u.id";
+
+        $where_clauses = [];
+        $params = [];
+
+        if (!empty($filters['customer_id'])) { // customers.id
+            $where_clauses[] = "o.customer_id = :customer_id_filter";
+            $params[':customer_id_filter'] = $filters['customer_id'];
+        }
+        if (!empty($filters['producer_id'])) { // producers.id
+            $from_part .= " LEFT JOIN order_items oi ON o.id = oi.order_id
+                            LEFT JOIN products p ON oi.product_id = p.id";
+            $where_clauses[] = "p.producer_id = :producer_id_filter";
+            $params[':producer_id_filter'] = $filters['producer_id'];
+        }
+        if (!empty($filters['status'])) { // deliveries.status
+            $where_clauses[] = "d.status = :status_filter";
+            $params[':status_filter'] = $filters['status'];
+        }
+
+        $query = $select_part . $from_part;
+        if (count($where_clauses) > 0) {
+            $query .= " WHERE " . implode(" AND ", $where_clauses);
+        }
 
         $query .= " ORDER BY d.created_at DESC LIMIT :limit OFFSET :offset";
 
         $stmt = $this->conn->prepare($query);
+        foreach ($params as $key => &$val) {
+            $stmt->bindParam($key, $val);
+        }
         $stmt->bindParam(":limit", $per_page, PDO::PARAM_INT);
         $stmt->bindParam(":offset", $offset, PDO::PARAM_INT);
 
-        // TODO: Bind des filtres ici
-
         $stmt->execute();
         return $stmt;
+    }
+
+    // Compter toutes les livraisons avec filtres
+    public function countAll($filters = []) {
+        $select_part = "SELECT COUNT(DISTINCT d.id) as total_rows";
+        $from_part = " FROM " . $this->table_name . " d
+                       LEFT JOIN orders o ON d.order_id = o.id";
+        // Ne pas joindre users ici, non nécessaire pour le count
+
+        $where_clauses = [];
+        $params = [];
+
+        if (!empty($filters['customer_id'])) {
+            $where_clauses[] = "o.customer_id = :customer_id_filter";
+            $params[':customer_id_filter'] = $filters['customer_id'];
+        }
+        if (!empty($filters['producer_id'])) {
+            $from_part .= " LEFT JOIN order_items oi_count ON o.id = oi_count.order_id
+                            LEFT JOIN products p_count ON oi_count.product_id = p_count.id";
+            $where_clauses[] = "p_count.producer_id = :producer_id_filter";
+            $params[':producer_id_filter'] = $filters['producer_id'];
+        }
+        if (!empty($filters['status'])) {
+            $where_clauses[] = "d.status = :status_filter";
+            $params[':status_filter'] = $filters['status'];
+        }
+
+        $query = $select_part . $from_part;
+        if (count($where_clauses) > 0) {
+            $query .= " WHERE " . implode(" AND ", $where_clauses);
+        }
+
+        $stmt = $this->conn->prepare($query);
+        foreach ($params as $key => &$val) {
+            $stmt->bindParam($key, $val);
+        }
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['total_rows'] ?? 0;
     }
 
 

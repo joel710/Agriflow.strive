@@ -88,10 +88,17 @@ const ProducerDashboard = {
     },
 
     handleLogout() {
-        alert('Déconnexion simulée réussie. Redirection...');
-        // In a real application, you would call the actual logout endpoint:
-        // window.location.href = 'auth/process.php?action=logout';
-        window.location.href = 'index.html'; // Redirect to homepage for simulation
+        // Appel réel de la déconnexion
+        fetch('/agriflow/auth/process.php?action=logout')
+            .then(response => {
+                // Rediriger même si la réponse n'est pas parfaite, car la session sera probablement détruite côté serveur
+                window.location.href = '/agriflow/index.html';
+            })
+            .catch(error => {
+                console.error('Erreur de déconnexion:', error);
+                // Tenter de rediriger quand même
+                window.location.href = '/agriflow/index.html';
+            });
     },
 
     async loadInitialData() {
@@ -179,17 +186,41 @@ const ProducerDashboard = {
             // } else {
             //     console.error('Failed to fetch recent orders:', result.message);
             // }
-            // --- MOCK DATA FOR NOW ---
-            const mockData = [
-                { id: 1, customerName: "Marie Lefevre", itemsPreview: "Tomates, Courgettes, Aubergines", totalAmount: 4250, currency: "FCFA", status: "En préparation" },
-                { id: 2, customerName: "Pierre Moreau", itemsPreview: "Pommes, Poires", totalAmount: 1875, currency: "FCFA", status: "En livraison" },
-                { id: 3, customerName: "Restaurant Le Terroir", itemsPreview: "Carottes, Pommes de terre, Oignons", totalAmount: 8720, currency: "FCFA", status: "Livré" },
-            ];
-            this.updateRecentOrdersUI(mockData);
-            console.log("Mock recent orders loaded.");
-            // --- END MOCK DATA ---
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if (!userData || !userData.producer_profile_id) {
+                console.error('Producer ID not found. Cannot fetch recent orders.');
+                this.updateRecentOrdersUI([]);
+                return;
+            }
+            const producerId = userData.producer_profile_id;
+
+            // Fetch first 5 orders for this producer
+            const response = await fetch(`/agriflow/api/orders?producer_id=${producerId}&page=1&per_page=5`);
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({ message: response.statusText }));
+                throw new Error(`HTTP error ${response.status}: ${err.message}`);
+            }
+            const result = await response.json();
+            if (result.status === 'success' && result.data && Array.isArray(result.data.items)) {
+                // Adapter les données pour updateRecentOrdersUI
+                const ordersForUI = result.data.items.map(order => ({
+                    id: order.id,
+                    // customerName: order.customer_email || `Client ID ${order.customer_id}`, // customer_email n'est pas toujours là
+                    customerName: `Client ${order.customer_id}`, // Simplifié, idéalement on aurait le nom du client
+                    itemsPreview: `Items: ${order.items_count}`, // Simplifié
+                    totalAmount: order.total_amount,
+                    currency: "FCFA", // En dur pour l'instant
+                    status: this.translateOrderStatus(order.status) // Traduire le statut si besoin
+                }));
+                this.updateRecentOrdersUI(ordersForUI);
+                console.log("Recent orders loaded from API for dashboard.");
+            } else {
+                console.error('Failed to fetch recent orders or data format incorrect:', result.message);
+                this.updateRecentOrdersUI([]);
+            }
         } catch (error) {
             console.error('Error fetching recent orders:', error);
+            this.updateRecentOrdersUI([]);
         }
     },
 
@@ -204,27 +235,42 @@ const ProducerDashboard = {
         // }
         console.log("Fetching products...");
         try {
-            // const response = await fetch('/api/producer/products');
-            // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            // const result = await response.json();
-            // if (result.status === 'success') {
-            //     this.state.products = result.data;
-            //     this.updateProductsGridUI(result.data);
-            // } else {
-            //     console.error('Failed to fetch products:', result.message);
-            // }
-            // --- MOCK DATA FOR NOW ---
-            const mockData = [
-                { id: 1, name: "Tomates Bio Lot 1", price: 350, unit: "kg", stockQuantity: 100, imageUrl: "https://readdy.ai/api/search-image?query=fresh%20organic%20carrots%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20vibrant%20orange%20color&width=300&height=200&seq=5&orientation=landscape", stockStatus: "En stock" },
-                { id: 2, name: "Pommes Gala", price: 250, unit: "kg", stockQuantity: 5, imageUrl: "https://readdy.ai/api/search-image?query=fresh%20organic%20apples%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20red%20and%20green%20apples&width=300&height=200&seq=6&orientation=landscape", stockStatus: "Stock faible" },
-                { id: 3, name: "Laitue Fraîche", price: 150, unit: "pièce", stockQuantity: 0, imageUrl: "https://readdy.ai/api/search-image?query=fresh%20organic%20lettuce%20on%20white%20background%2C%20high%20quality%20product%20photography%2C%20crisp%20green%20leaves&width=300&height=200&seq=7&orientation=landscape", stockStatus: "Rupture" }
-            ];
-            this.state.products = mockData;
-            this.updateProductsGridUI(mockData);
-            console.log("Mock products loaded.");
-            // --- END MOCK DATA ---
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if (!userData || !userData.producer_profile_id) {
+                console.error('Producer ID not found in local storage. Cannot fetch products.');
+                this.updateProductsGridUI([]); // Afficher une grille vide ou un message
+                return;
+            }
+            const producerId = userData.producer_profile_id;
+
+            const response = await fetch(`/agriflow/api/products?producer_id=${producerId}`);
+            if (!response.ok) {
+                const errorResult = await response.json().catch(() => ({ message: response.statusText }));
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorResult.message}`);
+            }
+            const result = await response.json();
+
+            if (result.status === 'success' && result.data && Array.isArray(result.data.items)) {
+                // Adapter la structure des données si nécessaire pour updateProductsGridUI
+                const productsForUI = result.data.items.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    unit: p.unit,
+                    stockQuantity: p.stock_quantity,
+                    imageUrl: p.image_url ? `/agriflow/${p.image_url}` : 'placeholder.jpg', // Assurer le chemin correct
+                    stockStatus: p.stock_quantity > 10 ? "En stock" : (p.stock_quantity > 0 ? "Stock faible" : "Rupture") // Logique de statut de stock
+                }));
+                this.state.products = productsForUI;
+                this.updateProductsGridUI(productsForUI);
+                console.log("Products loaded from API.");
+            } else {
+                console.error('Failed to fetch products or data format incorrect:', result.message || 'No data items');
+                this.updateProductsGridUI([]);
+            }
         } catch (error) {
             console.error('Error fetching products:', error);
+            this.updateProductsGridUI([]); // Afficher une grille vide ou un message d'erreur
         }
     },
 
@@ -419,19 +465,56 @@ const ProducerDashboard = {
             // } else {
             //     console.error('Failed to fetch orders:', result.message);
             // }
-             // --- MOCK DATA FOR NOW ---
-            const mockData = [
-                { id: 101, client: 'Alice Dupont', produits: 'Tomates, Salades', montant: '5000 FCFA', statut: 'Livré' },
-                { id: 102, client: 'Bob Martin', produits: 'Pommes, Carottes', montant: '3200 FCFA', statut: 'En cours' },
-                { id: 103, client: 'Charles D.', produits: 'Oeufs, Fromage', montant: '7500 FCFA', statut: 'En attente' }
-            ];
-            this.state.orders = mockData;
-            this.updateOrdersTableUI(mockData);
-            console.log("Mock orders loaded for tab.");
-            // --- END MOCK DATA ---
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if (!userData || !userData.producer_profile_id) {
+                console.error('Producer ID not found. Cannot fetch orders for tab.');
+                this.updateOrdersTableUI([]);
+                return;
+            }
+            const producerId = userData.producer_profile_id;
+            // TODO: Gérer la pagination pour cet onglet
+            const page = this.state.ordersCurrentPage || 1; // Supposons une gestion de pagination
+            const perPage = 10;
+
+            const response = await fetch(`/agriflow/api/orders?producer_id=${producerId}&page=${page}&per_page=${perPage}`);
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({ message: response.statusText }));
+                throw new Error(`HTTP error ${response.status}: ${err.message}`);
+            }
+            const result = await response.json();
+
+            if (result.status === 'success' && result.data && Array.isArray(result.data.items)) {
+                 const ordersForUI = result.data.items.map(order => ({
+                    id: order.id,
+                    client: `Client ${order.customer_id}`, // Idéalement, joindre le nom du client
+                    produits: `Items: ${order.items_count}`, // Simplifié, pourrait lister les produits
+                    montant: `${order.total_amount.toLocaleString('fr-FR')} FCFA`,
+                    statut: this.translateOrderStatus(order.status)
+                }));
+                this.state.orders = ordersForUI; // Mettre à jour l'état si utilisé ailleurs
+                this.updateOrdersTableUI(ordersForUI);
+                // TODO: Mettre à jour la pagination UI avec result.data.pagination
+                console.log("Orders loaded from API for tab.");
+            } else {
+                console.error('Failed to fetch orders for tab or data format incorrect:', result.message);
+                this.updateOrdersTableUI([]);
+            }
         } catch (error) {
             console.error('Error fetching orders:', error);
+            this.updateOrdersTableUI([]);
         }
+    },
+
+    translateOrderStatus(statusKey) { // Helper pour traduire les statuts si besoin
+        const statusMap = {
+            'en_attente': 'En attente',
+            'confirmee': 'Confirmée',
+            'en_preparation': 'En préparation',
+            'en_livraison': 'En livraison',
+            'livree': 'Livrée',
+            'annulee': 'Annulée'
+        };
+        return statusMap[statusKey] || statusKey;
     },
 
     async fetchDeliveries() {

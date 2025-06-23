@@ -61,6 +61,7 @@ L'API REST (PHP) expose les routes suivantes (voir `api/routes/api.php`) :
 - `GET /users/me` : (Connecté) Récupère le profil de l'utilisateur actuellement connecté.
 - `GET /users/{id}` : (Admin ou Propriétaire) Récupère les détails d'un utilisateur spécifique.
 - `PUT /users/{id}` : (Admin ou Propriétaire) Met à jour les informations d'un utilisateur (Admin peut changer le rôle et `is_active`).
+  - *Note sur la connexion (gérée via `auth/process.php`)* : En cas de succès, la réponse de connexion inclut également `producer_profile_id` (si rôle producteur) ou `customer_profile_id` (si rôle client), en plus des informations utilisateur de base et du token de session.
 - `DELETE /users/{id}` : (Admin) Désactive un utilisateur (soft delete) et supprime les profils associés (Customer/Producer).
 - `PUT /users/{id}/password` : (Admin ou Propriétaire) Met à jour le mot de passe d'un utilisateur.
 
@@ -72,9 +73,13 @@ L'API REST (PHP) expose les routes suivantes (voir `api/routes/api.php`) :
 - `DELETE /products/{id}` : (Admin ou Producteur propriétaire) Supprime un produit.
 
 ### Commandes (`/orders`)
-- `GET /orders` : (Client) Liste ses commandes. (Admin/Producteur) Liste toutes les commandes ou celles filtrées (ex: par statut, ou commandes contenant les produits d'un producteur - *filtrage producteur à affiner*). Pagination.
+- `GET /orders` : Liste les commandes.
+    - Pour un Client connecté : Liste ses propres commandes (filtré par `customer_id` automatiquement).
+    - Pour un Producteur connecté : Liste les commandes contenant ses produits (filtré par `producer_id` automatiquement ou via query param `producer_id` si égal à son propre ID).
+    - Pour un Admin connecté : Peut lister toutes les commandes, ou filtrer par `customer_id` ou `producer_id` via query params.
+    - Supporte la pagination et le filtrage par `status`.
 - `POST /orders` : (Client) Crée une nouvelle commande. Le `customer_id` est automatiquement assigné. Les prix sont vérifiés côté serveur.
-- `GET /orders/{id}` : (Client propriétaire, Admin, Producteur concerné) Récupère le détail d'une commande, incluant les items et informations de livraison.
+- `GET /orders/{id}` : (Client propriétaire, Admin, Producteur concerné par un item de la commande) Récupère le détail d'une commande, incluant les items et informations de livraison.
 - `PUT /orders/{id}` : (Admin, Producteur concerné, ou Client sous conditions) Met à jour une commande (ex: statut, adresse de livraison si statut le permet).
 - `DELETE /orders/{id}` : (Client propriétaire sous conditions, Admin, Producteur concerné) Annule une commande. Le statut de paiement peut passer à 'remboursée'.
 - `GET /orders/stats` : (Client) Statistiques des commandes du client connecté.

@@ -148,18 +148,15 @@ class ProducerController {
 
     // GET /producers/{id} (Profil public d'un producteur par son ID producers.id)
     public function getProducerProfileById($producer_id) {
-        $perm = $this->checkPermission((int)$producer_id, 'read_one');
-         if ($perm !== true && !($perm === false && $_SESSION['user_role'] === 'producteur') ) { // producteur peut lire d'autres producteurs
-             if($perm === "unauthorized") ApiResponse::unauthorized();
-             else if ($perm === "not_found") ApiResponse::notFound("Profil producteur non trouvé.");
-             // else ApiResponse::forbidden("Action non autorisée."); // Non, car c'est public
-             // Pour la lecture publique, on ne bloque pas, sauf si not_found
-         }
-
+        // Pour un endpoint public, on vérifie surtout si la ressource existe.
+        // checkPermission est plus pour les actions d'écriture ou les lectures restreintes.
+        // Cependant, on peut l'utiliser pour le "not_found" check.
 
         $this->producer->id = (int)$producer_id;
-        if ($this->producer->readOne()) {
+        if ($this->producer->readOne()) { // readOne charge les données dans $this->producer
             $producer_data = (array)$this->producer;
+            // On pourrait vouloir exclure certains champs pour un profil public vs profil perso/admin
+            // mais pour l'instant on retourne tout ce que le modèle charge.
             ApiResponse::success($producer_data);
         } else {
             ApiResponse::notFound("Profil producteur non trouvé.");
