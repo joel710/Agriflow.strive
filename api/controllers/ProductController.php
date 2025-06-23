@@ -105,25 +105,77 @@ class ProductController
             }
         }
 
-        $data = json_decode(file_get_contents("php://input"));
-
+        // Gérer les données FormData (POST) et les fichiers (FILES)
+        // Les noms des champs POST doivent correspondre à ceux envoyés par le FormData du JS
+        // Exemple: 'name', 'price', 'stock_quantity', 'category', 'description', 'unit', 'image' (pour le fichier)
         if (
-            !isset($data->name) || !isset($data->price) || !isset($data->unit) ||
-            ($_SESSION['user_role'] === 'admin' && !isset($data->producer_id))
+            !isset($_POST['name']) || !isset($_POST['price']) || !isset($_POST['stock_quantity']) || !isset($_POST['category']) ||
+            ($_SESSION['user_role'] === 'admin' && !isset($_POST['producer_id']))
         ) {
-            ApiResponse::badRequest("Les champs name, price, unit sont requis. Le producer_id est requis si créé par un admin.");
+            // On pourrait ajouter 'unit' ici si c'est strictement requis à la création
+            ApiResponse::badRequest("Les champs obligatoires (nom, prix, quantité, catégorie) sont requis. Le producer_id est requis si créé par un admin.");
             return;
         }
 
-        $this->product->producer_id = ($_SESSION['user_role'] === 'admin') ? $data->producer_id : $connected_producer_id;
-        $this->product->name = $data->name;
-        $this->product->description = $data->description ?? "";
-        $this->product->price = $data->price;
-        $this->product->unit = $data->unit;
-        $this->product->stock_quantity = $data->stock_quantity ?? 0;
-        $this->product->image_url = $data->image_url ?? null;
-        $this->product->is_bio = $data->is_bio ?? false;
-        $this->product->is_available = $data->is_available ?? true;
+        $this->product->producer_id = ($_SESSION['user_role'] === 'admin') ? (int)$_POST['producer_id'] : $connected_producer_id;
+        $this->product->name = htmlspecialchars(strip_tags($_POST['name']));
+        $this->product->description = isset($_POST['description']) ? htmlspecialchars(strip_tags($_POST['description'])) : "";
+        $this->product->price = (float)$_POST['price'];
+        $this->product->unit = isset($_POST['unit']) ? htmlspecialchars(strip_tags($_POST['unit'])) : "pièce"; // Valeur par défaut si non fourni ou rendre obligatoire
+        $this->product->category = htmlspecialchars(strip_tags($_POST['category'])); // La catégorie est attendue
+        $this->product->stock_quantity = (int)$_POST['stock_quantity'];
+
+        // Pour is_bio et is_available, le formulaire HTML devrait envoyer une valeur (ex: '1' ou 'true') si coché.
+        // Si non coché, le champ pourrait ne pas être envoyé, d'où le isset.
+        $this->product->is_bio = isset($_POST['is_bio']) ? filter_var($_POST['is_bio'], FILTER_VALIDATE_BOOLEAN) : false;
+        $this->product->is_available = isset($_POST['is_available']) ? filter_var($_POST['is_available'], FILTER_VALIDATE_BOOLEAN) : true; // Par défaut disponible
+        $this->product->image_url = null; // Sera défini si une image est uploadée
+
+        // Gestion de l'upload d'image
+        // Le nom du champ dans FormData doit être 'image' (correspondant à $_FILES['image'])
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+            $upload_base_dir = __DIR__ . '/../../uploads/product_images/'; // Chemin absolu pour la création du dossier
+            $upload_url_base = 'uploads/product_images/'; // Chemin relatif pour l'URL stockée en BDD
+
+            if (!is_dir($upload_base_dir)) {
+                if (!mkdir($upload_base_dir, 0775, true)) {
+                    ApiResponse::error("Impossible de créer le répertoire d'upload.", 500);
+                    return;
+                }
+            }
+
+            $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+            if (!in_array($file_extension, $allowed_extensions)) {
+                ApiResponse::badRequest("Type de fichier image non autorisé. Uniquement JPG, JPEG, PNG, GIF.");
+                return;
+            }
+
+            // Vérification du type MIME réel si possible (plus sécurisé)
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime_type = finfo_file($finfo, $_FILES['image']['tmp_name']);
+            finfo_close($finfo);
+            $allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mime_type, $allowed_mime_types)) {
+                 ApiResponse::badRequest("Type MIME de fichier image non autorisé.");
+                 return;
+            }
+
+
+            $image_filename = uniqid('prod_img_') . '.' . $file_extension;
+            $target_file_path = $upload_base_dir . $image_filename;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file_path)) {
+                $this->product->image_url = $upload_url_base . $image_filename;
+            } else {
+                ApiResponse::error("Erreur lors du déplacement du fichier image uploadé.", 500);
+                return;
+            }
+        } elseif (isset($_FILES['image']) && $_FILES['image']['error'] != UPLOAD_ERR_NO_FILE) {
+            ApiResponse::badRequest("Erreur lors de l'upload du fichier image (code: " . $_FILES['image']['error'] . ").");
+            return;
+        }
 
         try {
             // Vérifier si producer_id existe (surtout si admin le fournit)
@@ -285,40 +337,118 @@ class ProductController
             return;
         }
 
-        $data = json_decode(file_get_contents("php://input"));
+        // this->product est déjà chargé par readOne() dans checkPermission lors de l'appel à checkPermission()
 
-        if (empty($data)) {
-            ApiResponse::badRequest("Aucune donnée fournie pour la mise à jour.");
-            return;
+        $is_form_data = false;
+        // On détecte si c'est du FormData en vérifiant $_POST (car $_FILES peut être vide même avec FormData)
+        // ou si le Content-Type commence par multipart/form-data
+        if ((isset($_SERVER['CONTENT_TYPE']) && stripos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') !== false) || !empty($_POST)) {
+            $is_form_data = true;
         }
 
-        // this->product est déjà chargé par readOne() dans checkPermission
-        $this->product->name = $data->name ?? $this->product->name;
-        $this->product->description = $data->description ?? $this->product->description;
-        $this->product->price = $data->price ?? $this->product->price;
-        $this->product->unit = $data->unit ?? $this->product->unit;
-        $this->product->stock_quantity = $data->stock_quantity ?? $this->product->stock_quantity;
-        $this->product->image_url = $data->image_url ?? $this->product->image_url;
-        $this->product->is_bio = $data->is_bio ?? $this->product->is_bio; // bool
-        $this->product->is_available = $data->is_available ?? $this->product->is_available; // bool
+        if ($is_form_data) {
+            // Logique pour FormData (similaire à createProduct)
+            // Les champs non fournis dans $_POST ne mettront pas à jour les propriétés correspondantes si on utilise ?? $this->product->property
+            // Il faut donc vérifier leur existence avant de les assigner.
 
-        // L'admin peut changer le producer_id, le producteur non.
-        if ($_SESSION['user_role'] === 'admin' && isset($data->producer_id)) {
-             // Vérifier si le nouveau producer_id existe
+            if (isset($_POST['name'])) $this->product->name = htmlspecialchars(strip_tags($_POST['name']));
+            if (isset($_POST['description'])) $this->product->description = htmlspecialchars(strip_tags($_POST['description']));
+            if (isset($_POST['price'])) $this->product->price = (float)$_POST['price'];
+            if (isset($_POST['unit'])) $this->product->unit = htmlspecialchars(strip_tags($_POST['unit']));
+            if (isset($_POST['category'])) $this->product->category = htmlspecialchars(strip_tags($_POST['category']));
+            if (isset($_POST['stock_quantity'])) $this->product->stock_quantity = (int)$_POST['stock_quantity'];
+            if (isset($_POST['is_bio'])) $this->product->is_bio = filter_var($_POST['is_bio'], FILTER_VALIDATE_BOOLEAN);
+            if (isset($_POST['is_available'])) $this->product->is_available = filter_var($_POST['is_available'], FILTER_VALIDATE_BOOLEAN);
+
+            // Gestion de l'upload d'une nouvelle image
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $upload_base_dir = __DIR__ . '/../../uploads/product_images/';
+                $upload_url_base = 'uploads/product_images/'; // Doit correspondre à la structure du site
+                if (!is_dir($upload_base_dir)) {
+                    if (!mkdir($upload_base_dir, 0775, true)) {
+                         ApiResponse::error("Impossible de créer le répertoire d'upload pour la mise à jour.", 500); return;
+                    }
+                }
+
+                $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+                if (!in_array($file_extension, $allowed_extensions)) {
+                    ApiResponse::badRequest("Type de fichier image non autorisé pour la mise à jour (extension)."); return;
+                }
+
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime_type = finfo_file($finfo, $_FILES['image']['tmp_name']);
+                finfo_close($finfo);
+                $allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($mime_type, $allowed_mime_types)) {
+                     ApiResponse::badRequest("Type MIME de fichier image non autorisé pour la mise à jour."); return;
+                }
+
+                // Supprimer l'ancienne image si elle existe et qu'une nouvelle est fournie
+                if ($this->product->image_url) {
+                    $old_image_path = __DIR__ . '/../../' . $this->product->image_url;
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
+
+                $image_filename = uniqid('prod_img_update_') . '.' . $file_extension;
+                $target_file_path = $upload_base_dir . $image_filename;
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file_path)) {
+                    $this->product->image_url = $upload_url_base . $image_filename;
+                } else {
+                    ApiResponse::error("Erreur lors du déplacement du fichier image (mise à jour).", 500); return;
+                }
+            } elseif (isset($_FILES['image']) && $_FILES['image']['error'] != UPLOAD_ERR_NO_FILE) {
+                 ApiResponse::badRequest("Erreur d'upload de fichier image (mise à jour, code: " . $_FILES['image']['error'] . ")."); return;
+            }
+            // Si aucune nouvelle image n'est fournie via $_FILES, this->product->image_url conserve son ancienne valeur.
+
+            $producer_id_from_post = $_POST['producer_id'] ?? null;
+            if ($_SESSION['user_role'] === 'admin' && isset($producer_id_from_post)) {
+                $this->product->producer_id = (int)$producer_id_from_post;
+            } elseif ($_SESSION['user_role'] === 'producteur' && isset($producer_id_from_post) && (int)$producer_id_from_post != $this->product->producer_id) {
+                ApiResponse::forbidden("Un producteur ne peut pas changer l'appartenance du produit."); return;
+            }
+
+
+        } else { // Gestion des données JSON (envoyées via PUT typiquement)
+            $data = json_decode(file_get_contents("php://input"));
+            if (empty($data)) {
+                ApiResponse::badRequest("Aucune donnée JSON fournie pour la mise à jour."); return;
+            }
+
+            if(isset($data->name)) $this->product->name = $data->name;
+            if(isset($data->description)) $this->product->description = $data->description;
+            if(isset($data->price)) $this->product->price = $data->price;
+            if(isset($data->unit)) $this->product->unit = $data->unit;
+            if(isset($data->category)) $this->product->category = $data->category;
+            if(isset($data->stock_quantity)) $this->product->stock_quantity = $data->stock_quantity;
+            // La mise à jour de l'image via JSON se ferait en passant une nouvelle URL.
+            // Si on veut permettre de supprimer l'image, on pourrait passer image_url = null.
+            if(property_exists($data, 'image_url')) $this->product->image_url = $data->image_url;
+            if(isset($data->is_bio)) $this->product->is_bio = (bool)$data->is_bio;
+            if(isset($data->is_available)) $this->product->is_available = (bool)$data->is_available;
+
+            if ($_SESSION['user_role'] === 'admin' && isset($data->producer_id)) {
+                 $this->product->producer_id = $data->producer_id;
+            } elseif ($_SESSION['user_role'] === 'producteur' && isset($data->producer_id) && $data->producer_id != $this->product->producer_id) {
+                ApiResponse::forbidden("Un producteur ne peut pas changer l'appartenance du produit."); return;
+            }
+        }
+
+        // Validation du producer_id si admin l'a changé
+        if ($_SESSION['user_role'] === 'admin' &&
+            (($is_form_data && isset($_POST['producer_id'])) || (!$is_form_data && isset($data->producer_id))) ) {
+            $pid_to_validate = $is_form_data ? (int)$_POST['producer_id'] : (int)$data->producer_id;
             $producerCheckQuery = "SELECT id FROM producers WHERE id = :producer_id";
             $stmtProdCheck = $this->db->prepare($producerCheckQuery);
-            $stmtProdCheck->bindParam(':producer_id', $data->producer_id, PDO::PARAM_INT);
+            $stmtProdCheck->bindParam(':producer_id', $pid_to_validate, PDO::PARAM_INT);
             $stmtProdCheck->execute();
             if ($stmtProdCheck->rowCount() == 0) {
-                ApiResponse::badRequest("Le nouveau producer_id fourni n'existe pas.");
-                return;
+                ApiResponse::badRequest("Le nouveau producer_id fourni n'existe pas."); return;
             }
-            $this->product->producer_id = $data->producer_id;
-        } elseif ($_SESSION['user_role'] === 'producteur' && isset($data->producer_id) && $data->producer_id != $this->product->producer_id) {
-            ApiResponse::forbidden("Un producteur ne peut pas changer l'appartenance du produit.");
-            return;
         }
-
 
         try {
             if ($this->product->update()) {

@@ -328,5 +328,50 @@ class UserController {
             ApiResponse::error("Impossible de mettre à jour le mot de passe.", 500);
         }
     }
+
+    // POST /users/me/change-password (Utilisateur connecté change son propre mot de passe)
+    public function changeMyPassword() {
+        if (!isset($_SESSION['user_id'])) {
+            ApiResponse::unauthorized("Veuillez vous connecter.");
+            return;
+        }
+        $connected_user_id = (int)$_SESSION['user_id'];
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        if (!isset($data->current_password) || !isset($data->new_password) || !isset($data->confirm_new_password)) {
+            ApiResponse::badRequest("Mot de passe actuel, nouveau mot de passe et confirmation sont requis.");
+            return;
+        }
+
+        if (strlen($data->new_password) < 6) {
+            ApiResponse::badRequest("Le nouveau mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        if ($data->new_password !== $data->confirm_new_password) {
+            ApiResponse::badRequest("Le nouveau mot de passe et sa confirmation ne correspondent pas.");
+            return;
+        }
+
+        $this->user->id = $connected_user_id;
+        if (!$this->user->readOne(true)) { // true pour récupérer le hash du mot de passe
+            ApiResponse::notFound("Utilisateur non trouvé (session invalide?).");
+            return;
+        }
+
+        if (!password_verify($data->current_password, $this->user->password_hash)) {
+            ApiResponse::unauthorized("Mot de passe actuel incorrect.");
+            return;
+        }
+
+        $new_password_hash = password_hash($data->new_password, PASSWORD_ARGON2ID);
+
+        if ($this->user->updatePassword($new_password_hash)) {
+            ApiResponse::success(null, "Mot de passe mis à jour avec succès.");
+        } else {
+            ApiResponse::error("Impossible de mettre à jour le mot de passe.", 500);
+        }
+    }
 }
 ?>

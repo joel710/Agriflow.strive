@@ -80,12 +80,43 @@ try {
 
     // Routes pour les produits (/products)
     elseif (preg_match('#^/products$#', $endpoint)) {
-        // ... (code existant)
+        switch ($method) {
+            case 'GET':
+                $productController->getAllProducts();
+                break;
+            case 'POST':
+                $productController->createProduct();
+                break;
+            default:
+                ApiResponse::methodNotAllowed();
+                break;
+        }
     } elseif (preg_match('#^/products/([0-9]+)$#', $endpoint, $matches)) {
-        // ... (code existant)
+        $product_id = (int)$matches[1];
+        switch ($method) {
+            case 'GET':
+                $productController->getProductById($product_id);
+                break;
+            case 'POST': // Ajout pour gérer la mise à jour avec FormData (pour l'image)
+                $productController->updateProduct($product_id);
+                break;
+            case 'PUT':
+                // updateProduct gère maintenant JSON et FormData (détecte le type de contenu)
+                $productController->updateProduct($product_id);
+                break;
+            case 'DELETE':
+                $productController->deleteProduct($product_id);
+                break;
+            default:
+                ApiResponse::methodNotAllowed();
+                break;
+        }
     }
 
     // Routes pour les utilisateurs (/users)
+    elseif (preg_match('#^/users/me/change-password$#', $endpoint) && $method === 'POST') { // NOUVELLE ROUTE
+        $userController->changeMyPassword();
+    }
     elseif (preg_match('#^/users/me$#', $endpoint) && $method === 'GET') {
         $userController->getCurrentUserProfile();
     }
