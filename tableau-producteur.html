@@ -30,6 +30,7 @@
             }
         };
     </script>
+    <script src="js/profile-menu.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -195,53 +196,79 @@
     <!-- Navbar -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center">
-                <a href="#" class="text-2xl font-['Pacifico'] text-primary">Agritech</a>
-                <nav class="hidden md:flex ml-10">
-                    <a href="index.html"
-                        class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accueil</a>
+            <div class="flex items-center flex-1">
+                <a href="accueil.html" class="flex items-center"><img src="logo.png" alt="Logo Agritech"
+                        class="h-10"></a>
+                <nav class="hidden md:flex mx-auto space-x-8">
+                    <a href="accueil.html"
+                        class="border-b-2 border-transparent text-gray-500 pb-1 text-sm font-medium transition-all hover:text-primary hover:border-primary">Accueil</a>
                     <a href="shop.html"
-                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">MarketPlace</a>
-                    <a href="dash.html"
-                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Producteurs</a>
+                        class="border-b-2 border-transparent text-gray-500 pb-1 text-sm font-medium transition-all hover:text-primary hover:border-primary">MarketPlace</a>
+                    <a href="tableau-producteur.html"
+                        class="border-b-2 border-primary text-gray-900 pb-1 text-sm font-medium transition-all hover:text-primary">Producteurs</a>
                     <a href="customerboard.html"
-                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clients</a>
+                        class="border-b-2 border-transparent text-gray-500 pb-1 text-sm font-medium transition-all hover:text-primary hover:border-primary">Clients</a>
                     <a href="#"
-                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Livraison</a>
+                        class="border-b-2 border-transparent text-gray-500 pb-1 text-sm font-medium transition-all hover:text-primary hover:border-primary">Livraison</a>
                     <a href="#"
-                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">À
+                        class="border-b-2 border-transparent text-gray-500 pb-1 text-sm font-medium transition-all hover:text-primary hover:border-primary">À
                         propos</a>
                 </nav>
             </div>
-            <div class="flex items-center">
-                <!-- Remplacement des boutons Se connecter/S'inscrire -->
-                <div class="hidden md:flex items-center">
-                    <span class="text-gray-700 mr-4">Bienvenue, Producteur X</span>
-                    <button id="logout-button"
-                        class="bg-red-500 text-white px-4 py-2 !rounded-button hover:bg-red-600 transition whitespace-nowrap">
-                        Se déconnecter
+            <div class="flex items-center space-x-4">
+                <!-- Menu profil producteur -->
+                <div id="user-profile" class="relative">
+                    <button type="button"
+                        class="flex items-center space-x-2 text-gray-700 hover:text-primary transition"
+                        id="profile-menu-button" aria-expanded="false">
+                        <img src="https://readdy.ai/api/search-image?query=professional%20farmer%20portrait%2C%20close-up%20headshot%2C%20neutral%20background%2C%2040%20year%20old%20man&width=40&height=40&seq=3&orientation=squarish"
+                            alt="Profil" class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-sm font-medium" id="farm-name">Ferme de la Vallée</span>
+                        <i class="ri-arrow-down-s-line"></i>
                     </button>
+                    <div class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
+                        id="profile-dropdown">
+                        <a href="tableau-producteur.html"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tableau de bord</a>
+                        <a href="#" id="logout-button"
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se
+                            déconnecter</a>
+                    </div>
                 </div>
-                <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center" id="mobile-menu-button">
+                <!-- Bouton menu mobile -->
+                <button class="md:hidden w-10 h-10 flex items-center justify-center" id="mobile-menu-button">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
             </div>
         </div>
-        <!-- Mobile menu, an example structure if needed -->
+        <!-- Mobile menu -->
         <div id="mobile-menu" class="md:hidden hidden bg-white shadow-md">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <span class="block px-3 py-2 rounded-md text-base font-medium text-gray-700">Bienvenue, Producteur
-                    X</span>
-                <button id="mobile-logout-button"
-                    class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:bg-red-100 hover:text-red-700">
-                    Se déconnecter
-                </button>
-                <hr class="my-2">
-                <a href="index.html"
+                <a href="accueil.html"
                     class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Accueil</a>
                 <a href="shop.html"
                     class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">MarketPlace</a>
-                <!-- Add other nav links for mobile here if they differ from desktop or if sidebar items should be here too -->
+                <a href="tableau-producteur.html"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-primary/10">Producteurs</a>
+                <a href="customerboard.html"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Clients</a>
+                <hr class="my-2">
+                <div class="px-3 py-2">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <img src="https://readdy.ai/api/search-image?query=professional%20farmer%20portrait%2C%20close-up%20headshot%2C%20neutral%20background%2C%2040%20year%20old%20man&width=40&height=40&seq=3&orientation=squarish"
+                            alt="Profil" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="text-base font-medium text-gray-800" id="mobile-farm-name">Ferme de la Vallée</p>
+                        </div>
+                    </div>
+                    <a href="tableau-producteur.html"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100"><i
+                            class="ri-dashboard-line mr-2"></i>Tableau de bord</a>
+                    <button id="mobile-logout-button"
+                        class="block w-full text-left mt-1 px-3 py-2 rounded-md text-base font-medium text-red-500 hover:bg-red-100 hover:text-red-700">
+                        <i class="ri-logout-box-r-line mr-2"></i>Se déconnecter
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -306,18 +333,6 @@
                             <!-- Changed ID for clarity -->
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-semibold">Tableau de bord</h3>
-                                <div class="flex items-center">
-                                    <div class="relative mr-3">
-                                        <i class="ri-notification-3-line text-gray-500"></i>
-                                        <span
-                                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <img src="https://readdy.ai/api/search-image?query=professional%20farmer%20portrait%2C%20close-up%20headshot%2C%20neutral%20background%2C%2040%20year%20old%20man&width=40&height=40&seq=3&orientation=squarish"
-                                            alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                                        <span class="ml-2 text-gray-700">Thomas Dupont</span>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Stats Cards -->
@@ -880,6 +895,18 @@
             if (statOrders) statOrders.textContent = '152';
             if (statSales) statSales.textContent = '1 250 000 FCFA';
             // --- Fin injection données ---
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function () {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
         });
     </script>
 
