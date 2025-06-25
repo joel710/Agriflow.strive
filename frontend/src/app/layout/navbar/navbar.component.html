@@ -1,0 +1,53 @@
+<nav class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="flex items-center">
+      <a routerLink="/" class="text-2xl font-['Pacifico'] text-primary">Agriflow</a>
+      <div class="hidden md:flex ml-10 space-x-4">
+        <a routerLink="/marche" routerLinkActive="text-primary border-b-2 border-primary"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="text-gray-500 hover:text-primary transition-colors px-1 pt-1 text-sm font-medium">MarketPlace</a>
+        <a routerLink="/producteurs" routerLinkActive="text-primary border-b-2 border-primary"
+           class="text-gray-500 hover:text-primary transition-colors px-1 pt-1 text-sm font-medium">Producteurs</a>
+
+        <ng-container *ngIf="currentUser">
+          <a *ngIf="currentUser.role === 'client'" routerLink="/tableau-client"
+             routerLinkActive="text-primary border-b-2 border-primary"
+             class="text-gray-500 hover:text-primary transition-colors px-1 pt-1 text-sm font-medium">Mon Espace Client</a>
+          <a *ngIf="currentUser.role === 'producteur'" routerLink="/tableau-producteur"
+             routerLinkActive="text-primary border-b-2 border-primary"
+             class="text-gray-500 hover:text-primary transition-colors px-1 pt-1 text-sm font-medium">Mon Espace Producteur</a>
+           <a *ngIf="currentUser.role === 'admin'" routerLink="/admin"
+             routerLinkActive="text-primary border-b-2 border-primary"
+             class="text-gray-500 hover:text-primary transition-colors px-1 pt-1 text-sm font-medium">Admin</a>
+        </ng-container>
+        <!-- Autres liens comme Livraison, À propos peuvent être ajoutés ici -->
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <ng-container *ngIf="!currentUser">
+        <a routerLink="/login"
+           class="hidden md:inline-block px-4 py-2 text-gray-700 hover:text-primary mr-2 whitespace-nowrap text-sm">Se
+          connecter</a>
+        <a routerLink="/register"
+           class="bg-primary text-white px-5 py-2 !rounded-button hover:bg-opacity-90 transition whitespace-nowrap text-sm">S'inscrire</a>
+      </ng-container>
+
+      <ng-container *ngIf="currentUser">
+        <span class="text-sm text-gray-700 hidden md:inline-block">Bonjour, {{ currentUser.producer?.farm_name || currentUser.customer?.user?.email || currentUser.email }}</span>
+        <!-- Menu déroulant utilisateur ici -->
+        <button (click)="logout()"
+                class="bg-red-500 text-white px-3 py-1.5 !rounded-button hover:bg-red-600 transition whitespace-nowrap text-sm">
+          Déconnexion
+        </button>
+      </ng-container>
+
+      <app-cart-icon class="ml-3"></app-cart-icon>
+
+      <button class="ml-4 md:hidden w-10 h-10 flex items-center justify-center">
+        <!-- Icône Menu pour mobile -->
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+      </button>
+    </div>
+  </div>
+</nav>

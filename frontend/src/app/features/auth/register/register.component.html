@@ -1,0 +1,140 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100 py-12">
+  <div class="w-full max-w-lg p-8 space-y-6 bg-white rounded-lg shadow-md">
+    <div class="text-center">
+      <a routerLink="/" class="text-4xl font-['Pacifico'] text-primary">Agriflow</a>
+      <h2 class="mt-4 text-2xl font-semibold text-gray-700">Créez votre compte</h2>
+    </div>
+
+    <!-- Step 1: Role Selection -->
+    <div *ngIf="currentStep === 'roleSelection'" class="space-y-6">
+      <p class="text-center text-gray-600">Comment souhaitez-vous utiliser Agriflow ?</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <button (click)="selectRole('clientForm')" type="button"
+                class="flex flex-col items-center justify-center p-6 border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary/5 transition-colors">
+          <!-- Add client icon here -->
+          <svg class="w-12 h-12 text-primary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <span class="text-lg font-medium text-gray-700">Je suis Client</span>
+          <span class="text-sm text-gray-500">Acheter des produits frais</span>
+        </button>
+        <button (click)="selectRole('producerForm')" type="button"
+                class="flex flex-col items-center justify-center p-6 border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary/5 transition-colors">
+          <!-- Add producer icon here -->
+          <svg class="w-12 h-12 text-primary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.343A8 8 0 016.343 7.657m11.314 0a8 8 0 00-11.314 0M12 21V3m0 0L9 6m3-3l3 6"></path></svg>
+          <span class="text-lg font-medium text-gray-700">Je suis Producteur</span>
+          <span class="text-sm text-gray-500">Vendre mes produits</span>
+        </button>
+      </div>
+      <p class="text-center text-sm text-gray-600">
+        Déjà un compte?
+        <a routerLink="/login" class="font-medium text-primary hover:text-primary-dark">Connectez-vous</a>
+      </p>
+    </div>
+
+    <!-- Step 2: Registration Form (Common fields + Role specific) -->
+    <form *ngIf="currentStep !== 'roleSelection'" [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <input type="hidden" formControlName="role">
+
+      <div>
+        <label for="email-register" class="block text-sm font-medium text-gray-700">Adresse Email</label>
+        <input id="email-register" type="email" formControlName="email" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+               [ngClass]="{'border-red-500': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
+        <!-- Error messages for email -->
+      </div>
+
+      <div>
+        <label for="phone-register" class="block text-sm font-medium text-gray-700">Téléphone (Optionnel)</label>
+        <input id="phone-register" type="tel" formControlName="phone"
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+      </div>
+
+      <div>
+        <label for="password-register" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+        <input id="password-register" type="password" formControlName="password" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+               [ngClass]="{'border-red-500': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
+        <!-- Error messages for password -->
+      </div>
+
+      <div>
+        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmer Mot de passe</label>
+        <input id="password_confirmation" type="password" formControlName="password_confirmation" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+               [ngClass]="{'border-red-500': (registerForm.get('password_confirmation')?.invalid || registerForm.errors?.['passwordMismatch']) && registerForm.get('password_confirmation')?.touched}">
+        <div *ngIf="registerForm.get('password_confirmation')?.invalid && registerForm.get('password_confirmation')?.touched && registerForm.get('password_confirmation')?.errors?.['required']"
+             class="mt-1 text-xs text-red-500">La confirmation est requise.</div>
+        <div *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('password_confirmation')?.touched"
+             class="mt-1 text-xs text-red-500">Les mots de passe ne correspondent pas.</div>
+      </div>
+
+      <!-- Producer Specific Fields -->
+      <ng-container *ngIf="currentStep === 'producerForm'">
+        <h3 class="text-lg font-medium text-gray-800 pt-4 border-t border-gray-200">Informations Producteur</h3>
+        <div>
+          <label for="farm_name" class="block text-sm font-medium text-gray-700">Nom de la Ferme</label>
+          <input id="farm_name" type="text" formControlName="farm_name"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                 [ngClass]="{'border-red-500': registerForm.get('farm_name')?.invalid && registerForm.get('farm_name')?.touched}">
+          <!-- Error messages -->
+        </div>
+        <div>
+          <label for="siret" class="block text-sm font-medium text-gray-700">SIRET (Optionnel)</label>
+          <input id="siret" type="text" formControlName="siret"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                 [ngClass]="{'border-red-500': registerForm.get('siret')?.invalid && registerForm.get('siret')?.touched}">
+           <div *ngIf="registerForm.get('siret')?.errors?.['pattern'] && registerForm.get('siret')?.touched" class="text-xs text-red-500 mt-1">
+              Le SIRET doit contenir 14 chiffres.
+            </div>
+        </div>
+        <!-- Add other producer fields: experience_years, farm_type, etc. -->
+         <div>
+          <label for="farm_address" class="block text-sm font-medium text-gray-700">Adresse de la ferme</label>
+          <textarea id="farm_address" formControlName="farm_address" rows="3"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"></textarea>
+        </div>
+      </ng-container>
+
+      <!-- Customer Specific Fields -->
+      <ng-container *ngIf="currentStep === 'clientForm'">
+        <h3 class="text-lg font-medium text-gray-800 pt-4 border-t border-gray-200">Informations Client</h3>
+        <div>
+          <label for="delivery_address" class="block text-sm font-medium text-gray-700">Adresse de Livraison Principale</label>
+          <textarea id="delivery_address" formControlName="delivery_address" rows="3"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                 [ngClass]="{'border-red-500': registerForm.get('delivery_address')?.invalid && registerForm.get('delivery_address')?.touched}"></textarea>
+          <!-- Error messages -->
+        </div>
+         <div>
+            <label for="food_preferences" class="block text-sm font-medium text-gray-700">Préférences alimentaires</label>
+            <select id="food_preferences" formControlName="food_preferences"
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+              <option value="aucune">Aucune</option>
+              <option value="bio">Bio</option>
+              <option value="local">Local</option>
+            </select>
+          </div>
+      </ng-container>
+
+      <div *ngIf="errorMessage" class="p-3 bg-red-100 text-red-700 rounded-md text-sm">
+        {{ errorMessage }}
+      </div>
+
+      <div class="flex items-center space-x-4 pt-4">
+         <button type="button" (click)="goBackToRoleSelection()"
+                class="w-1/2 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+          Précédent
+        </button>
+        <button type="submit" [disabled]="isLoading || registerForm.invalid"
+                class="w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50">
+          <span *ngIf="isLoading" class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></span>
+          <span *ngIf="isLoading">Inscription...</span>
+          <span *ngIf="!isLoading">S'inscrire</span>
+        </button>
+      </div>
+       <p *ngIf="currentStep !== 'roleSelection'" class="mt-4 text-center text-sm text-gray-600">
+        Déjà un compte?
+        <a routerLink="/login" class="font-medium text-primary hover:text-primary-dark">Connectez-vous</a>
+      </p>
+    </form>
+  </div>
+</div>

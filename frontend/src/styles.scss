@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Example of global styles */
+body {
+  font-family: 'Poppins', sans-serif; /* Assuming Poppins is still desired from marche.html */
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb; /* A light gray background, similar to bg-gray-50 */
+  color: #1f2937; /* Default text color */
+}
+
+/* You might want to define some primary/secondary colors here if not solely relying on Tailwind config */
+/* Or ensure Tailwind is configured with the project's color palette */

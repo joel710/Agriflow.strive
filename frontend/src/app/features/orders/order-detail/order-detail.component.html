@@ -1,0 +1,112 @@
+<div class="container mx-auto px-4 py-8">
+  <div *ngIf="isLoading" class="text-center py-10">
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mx-auto"></div>
+    <p class="mt-3 text-gray-600">Chargement des détails de la commande...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+    <span class="font-medium">Erreur!</span> {{ errorMessage }}
+    <a routerLink="/mes-commandes" class="ml-4 font-medium text-red-800 hover:underline">Retour à mes commandes</a>
+  </div>
+
+  <div *ngIf="order$ | async as order; else notFoundOrLoading">
+    <div *ngIf="order">
+      <div class="bg-white shadow-lg rounded-lg p-6 md:p-8 mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-6 border-b">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-semibold text-gray-800">Commande #{{ order.id }}</h1>
+            <p class="text-sm text-gray-500">Passée le: {{ order.created_at | date:'dd MMMM yyyy à HH:mm' }}</p>
+          </div>
+          <div class="mt-4 md:mt-0 text-left md:text-right">
+            <span [ngClass]="getStatusClass(order.status)">{{ formatStatus(order.status) }}</span>
+            <p class="text-sm text-gray-500 mt-1">Paiement:
+              <span [ngClass]="getPaymentStatusClass(order.payment_status)" class="font-medium">
+                {{ order.payment_status | titlecase }}
+              </span>
+               <span *ngIf="order.payment_method"> (via {{ order.payment_method | titlecase }})</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="md:col-span-2">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Articles Commandés</h2>
+            <div class="space-y-4">
+              <div *ngFor="let item of order.items" class="flex items-center bg-gray-50 p-3 rounded-md">
+                <img [src]="item.product?.image_url || 'https://via.placeholder.com/80x80?text=P'"
+                     [alt]="item.product?.name"
+                     class="w-16 h-16 object-cover rounded-md mr-4">
+                <div class="flex-grow">
+                  <h3 class="font-medium text-gray-800">{{ item.product?.name || 'Produit non disponible' }}</h3>
+                  <p class="text-sm text-gray-500">Quantité: {{ item.quantity }}</p>
+                  <p class="text-sm text-gray-500">Prix unitaire: {{ item.unit_price | currency:'XOF':'symbol':'1.0-0' }}</p>
+                  <p *ngIf="item.product?.producer?.farm_name" class="text-xs text-gray-500">
+                    Vendu par: {{ item.product.producer.farm_name }}
+                  </p>
+                </div>
+                <div class="text-md font-semibold text-gray-700">
+                  {{ item.total_price | currency:'XOF':'symbol':'1.0-0' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Résumé Financier</h2>
+            <div class="bg-gray-50 p-4 rounded-md space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Sous-total:</span>
+                <span class="font-medium text-gray-800">{{ order.total_amount | currency:'XOF':'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Frais de livraison:</span>
+                <span class="font-medium text-gray-800">À calculer</span> <!-- TODO -->
+              </div>
+              <!-- <div class="flex justify-between">
+                <span class="text-gray-600">Réductions:</span>
+                <span class="font-medium text-green-600">- {{ 0 | currency:'XOF':'symbol':'1.0-0' }}</span>
+              </div> -->
+              <div class="flex justify-between text-lg font-semibold text-gray-800 pt-2 border-t mt-2">
+                <span>Total Payé:</span>
+                <span>{{ order.total_amount | currency:'XOF':'symbol':'1.0-0' }}</span> <!-- Ajuster si frais de port etc. -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Adresse de Livraison</h2>
+                <div class="bg-gray-50 p-4 rounded-md text-sm text-gray-600 leading-relaxed">
+                    <p>{{ order.customer?.user?.email || 'Client non spécifié' }}</p> <!-- Assuming customer.user is loaded -->
+                    <p>{{ order.delivery_address }}</p>
+                    <p *ngIf="order.customer?.user?.phone">{{ order.customer.user.phone }}</p>
+                    <p *ngIf="order.delivery_notes" class="mt-2 pt-2 border-t text-xs">
+                        <strong>Notes:</strong> {{ order.delivery_notes }}
+                    </p>
+                </div>
+            </div>
+            <div *ngIf="order.delivery">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Informations de Livraison</h2>
+                <div class="bg-gray-50 p-4 rounded-md text-sm text-gray-600">
+                    <p>Statut: <span class="font-medium">{{ order.delivery.status | titlecase }}</span></p>
+                    <p *ngIf="order.delivery.tracking_number">N° de suivi: <span class="font-medium">{{ order.delivery.tracking_number }}</span></p>
+                    <p *ngIf="order.delivery.estimated_delivery_date">Date estimée: <span class="font-medium">{{ order.delivery.estimated_delivery_date | date:'dd/MM/yyyy' }}</span></p>
+                    <!-- Autres infos de livraison -->
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center md:text-left">
+          <a routerLink="/mes-commandes" class="text-primary hover:underline">&larr; Retour à l'historique des commandes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #notFoundOrLoading>
+    <div *ngIf="!isLoading && !errorMessage" class="text-center py-10">
+      <p class="text-gray-600 text-lg">Détails de la commande non disponibles.</p>
+    </div>
+  </ng-template>
+</div>

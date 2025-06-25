@@ -1,0 +1,19 @@
+// Styles spécifiques pour la Navbar si Tailwind ne suffit pas.
+// Par exemple, pour des transitions custom ou des éléments complexes.
+
+// Assurez-vous que les couleurs primary et secondary sont bien définies dans tailwind.config.js
+// et que Tailwind est correctement importé dans styles.scss global.
+
+// Exemple de style pour le lien actif si la classe de Tailwind ne suffit pas ou pour plus de contrôle
+// a.active {
+//   color: var(--color-primary); /* Assurez-vous que cette variable CSS est définie ou utilisez la classe Tailwind */
+//   border-bottom-color: var(--color-primary);
+// }
+
+// Les styles Tailwind sont généralement suffisants pour la plupart des besoins.
+// Utilisez ce fichier pour des ajustements fins ou des styles non couverts par Tailwind.
+
+// Pour le menu déroulant utilisateur (si implémenté plus tard) :
+// .dropdown-menu {
+//   /* styles pour le menu */
+// }

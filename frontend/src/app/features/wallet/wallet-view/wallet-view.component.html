@@ -1,0 +1,83 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-semibold text-gray-800 mb-6">Mon Portefeuille</h1>
+
+  <div *ngIf="isLoading && !walletData" class="text-center py-10">
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mx-auto"></div>
+    <p class="mt-3 text-gray-600">Chargement du portefeuille...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+    <span class="font-medium">Erreur!</span> {{ errorMessage }}
+  </div>
+
+  <div *ngIf="walletData && !isLoading && !errorMessage">
+    <!-- Solde du Portefeuille -->
+    <div class="bg-gradient-to-r from-primary to-green-600 text-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="text-xl font-medium mb-1">Solde Actuel</h2>
+      <p class="text-4xl font-bold">
+        {{ walletData.wallet.balance | currency:'XOF':'symbol':'1.0-0' }}
+        <span class="text-lg font-normal">{{ walletData.wallet.currency }}</span>
+      </p>
+      <p class="text-sm opacity-80 mt-1">Mis à jour le: {{ walletData.wallet.updated_at | date:'dd/MM/yyyy HH:mm' }}</p>
+      <!-- Boutons d'action (ex: Ajouter des fonds - si implémenté) -->
+      <!-- <div class="mt-4">
+        <button class="bg-white text-primary px-4 py-2 rounded-md hover:bg-gray-100 transition font-medium text-sm">
+          Ajouter des fonds
+        </button>
+      </div> -->
+    </div>
+
+    <!-- Historique des Transactions -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <h2 class="text-xl font-semibold text-gray-700 p-4 border-b">Historique des Transactions</h2>
+      <div *ngIf="walletData.transactions && walletData.transactions.data.length > 0; else noTransactions">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let tx of walletData.transactions.data" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ tx.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ tx.description || 'N/A' }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" [ngClass]="getTransactionTypeClass(tx.type)">
+                {{ tx.type | titlecase }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium" [ngClass]="getTransactionTypeClass(tx.type)">
+                {{ (tx.type === 'debit' ? '-' : '+') }}{{ tx.amount | currency:'XOF':'symbol-narrow':'1.0-0' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Pagination pour les transactions -->
+        <div *ngIf="walletData.transactions && walletData.transactions.total > itemsPerPage" class="px-6 py-4 border-t flex justify-center items-center space-x-2">
+            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1 || isLoading"
+                    class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+              Préc.
+            </button>
+            <ng-container *ngFor="let pageNum of paginationControls">
+                <button *ngIf="pageNum !== '...'"
+                        (click)="onPageChange(+pageNum)"
+                        [ngClass]="{'bg-primary text-white border-primary': currentPage === +pageNum, 'border-gray-300 hover:bg-gray-100': currentPage !== +pageNum}"
+                        [disabled]="isLoading"
+                        class="px-3 py-1 border rounded-md text-sm">
+                  {{ pageNum }}
+                </button>
+                <span *ngIf="pageNum === '...'" class="px-3 py-1 text-sm text-gray-500">...</span>
+            </ng-container>
+            <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages || isLoading"
+                    class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+              Suiv.
+            </button>
+        </div>
+      </div>
+      <ng-template #noTransactions>
+        <p class="p-6 text-center text-gray-500">Aucune transaction pour le moment.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

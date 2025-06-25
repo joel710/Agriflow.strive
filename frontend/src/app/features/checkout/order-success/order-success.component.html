@@ -1,0 +1,39 @@
+<div class="container mx-auto px-4 py-12 text-center">
+  <div *ngIf="isLoading" class="py-10">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary mx-auto"></div>
+    <p class="mt-4 text-gray-600">Chargement...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="p-6 mb-6 text-lg text-red-700 bg-red-100 rounded-lg shadow-md" role="alert">
+    <h2 class="text-2xl font-semibold mb-3">Erreur</h2>
+    <p>{{ errorMessage }}</p>
+    <a routerLink="/marche" class="mt-6 inline-block bg-primary text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition">
+      Retour à la boutique
+    </a>
+  </div>
+
+  <div *ngIf="order$ | async as order; let orderLoaded = true">
+    <div *ngIf="order && !isLoading && !errorMessage" class="bg-green-50 p-8 rounded-lg shadow-md">
+      <svg class="w-20 h-20 text-green-500 mx-auto mb-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <h1 class="text-3xl font-bold text-green-700 mb-4">Paiement Réussi !</h1>
+      <p class="text-lg text-gray-700 mb-2">Votre commande <strong class="text-gray-900">#{{ order.id }}</strong> a été confirmée.</p>
+      <p class="text-gray-600 mb-6">
+        Un email de confirmation avec les détails de votre commande vous a été envoyé (simulation).
+      </p>
+      <p class="text-gray-600 mb-2">Montant total payé: <strong class="text-gray-800">{{ order.total_amount | currency:'XOF':'symbol':'1.0-0' }}</strong></p>
+      <p class="text-gray-600 mb-8">Statut du paiement: <span class="font-semibold" [ngClass]="{'text-green-600': order.payment_status === 'payee'}">{{ order.payment_status | titlecase }}</span></p>
+
+      <div class="space-y-4 md:space-y-0 md:space-x-4">
+        <a [routerLink]="['/mes-commandes', order.id]" class="inline-block bg-primary text-white px-8 py-3 rounded-md hover:bg-opacity-90 transition text-lg">
+          Voir les détails de ma commande
+        </a>
+        <a routerLink="/marche" class="inline-block border border-primary text-primary px-8 py-3 rounded-md hover:bg-primary/10 transition text-lg">
+          Continuer mes achats
+        </a>
+      </div>
+    </div>
+     <div *ngIf="!order && !isLoading && !errorMessage" class="py-10">
+        <p class="text-gray-600 text-lg">Impossible de charger les détails de la commande pour le moment.</p>
+     </div>
+  </div>
+</div>

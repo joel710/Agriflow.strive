@@ -1,0 +1,55 @@
+<footer class="bg-gray-800 text-white py-12">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <a routerLink="/" class="text-2xl font-['Pacifico'] text-white mb-4 inline-block">Agriflow</a>
+        <p class="text-gray-400 mb-4 text-sm">La technologie au service de l'agriculture. Connectons producteurs et consommateurs.</p>
+        <!-- Icônes réseaux sociaux (exemple) -->
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-400 hover:text-white transition"><i class="ri-facebook-fill ri-lg"></i></a>
+          <a href="#" class="text-gray-400 hover:text-white transition"><i class="ri-twitter-fill ri-lg"></i></a>
+          <!-- Ajoutez Remixicon si vous utilisez ces classes : <link href="https://cdn.jsdelivr.net/npm/remixicon@<version>/fonts/remixicon.css" rel="stylesheet"> -->
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Liens rapides</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a routerLink="/" class="text-gray-400 hover:text-white transition">Accueil</a></li>
+          <li><a routerLink="/marche" class="text-gray-400 hover:text-white transition">MarketPlace</a></li>
+          <li><a routerLink="/a-propos" class="text-gray-400 hover:text-white transition">À propos</a></li>
+          <!-- Autres liens -->
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Support</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a routerLink="/faq" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+          <li><a routerLink="/contact" class="text-gray-400 hover:text-white transition">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+        <p class="text-gray-400 mb-4 text-sm">Recevez nos actualités.</p>
+        <form class="mb-4">
+          <div class="flex">
+            <input type="email" placeholder="Votre email"
+                   class="px-3 py-2 w-full text-gray-800 rounded-l-md border-none text-sm focus:ring-primary">
+            <button type="submit"
+                    class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-opacity-90 transition whitespace-nowrap text-sm">S'abonner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; {{ currentYear }} Agriflow. Tous droits réservés.</p>
+      <div class="flex space-x-4 text-sm">
+        <a routerLink="/confidentialite" class="text-gray-400 hover:text-white transition">Confidentialité</a>
+        <a routerLink="/conditions" class="text-gray-400 hover:text-white transition">Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>

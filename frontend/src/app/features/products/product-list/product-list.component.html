@@ -1,0 +1,123 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Titre et description (optionnel) -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Notre Marketplace</h1>
+    <p class="text-gray-600 max-w-2xl mx-auto">Découvrez des produits frais, directement des producteurs locaux.</p>
+  </div>
+
+  <!-- Filtres et Recherche (Placeholder) -->
+  <div class="mb-8 p-6 bg-white rounded-lg shadow">
+    <div class="flex flex-col md:flex-row gap-4 items-center">
+      <div class="relative flex-grow w-full md:w-auto">
+        <input type="text" placeholder="Rechercher des produits, fermes..."
+               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-md focus:border-primary focus:ring-1 focus:ring-primary text-sm">
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+        </div>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button class="px-4 py-3 border border-gray-200 rounded-md hover:border-gray-300 text-sm whitespace-nowrap">
+          <i class="ri-filter-3-line mr-2"></i>Filtrer
+        </button>
+        <button class="px-4 py-3 border border-gray-200 rounded-md hover:border-gray-300 text-sm whitespace-nowrap">
+          <i class="ri-map-pin-line mr-2"></i>À proximité
+        </button>
+      </div>
+    </div>
+    <!-- Catégories (Placeholder) -->
+    <div class="mt-6">
+      <div class="flex overflow-x-auto pb-2 gap-2">
+        <button class="bg-primary text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">Tous</button>
+        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Fruits</button>
+        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm whitespace-nowrap">Légumes</button>
+        <!-- ... autres catégories -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Affichage des produits -->
+  <div *ngIf="isLoading" class="text-center py-10">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary mx-auto"></div>
+    <p class="mt-4 text-gray-600">Chargement des produits...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+    <span class="font-medium">Erreur!</span> {{ errorMessage }}
+  </div>
+
+  <ng-container *ngIf="paginatedProducts$ | async as productsResponse; else noProductsOrError">
+    <div *ngIf="productsResponse && productsResponse.data.length > 0; else noProductsTemplate"
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div *ngFor="let product of productsResponse.data"
+           class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
+        <a [routerLink]="['/produit', product.id]" class="block">
+          <img [src]="product.image_url || 'https://via.placeholder.com/300x200?text=Produit'"
+               [alt]="product.name"
+               class="w-full h-48 object-cover">
+        </a>
+        <div class="p-4 flex flex-col flex-grow">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-medium text-gray-800 text-md">
+                <a [routerLink]="['/produit', product.id]" class="hover:text-primary">{{ product.name }}</a>
+            </h3>
+            <span *ngIf="product.is_bio" class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">Bio</span>
+          </div>
+          <p *ngIf="product.producer?.farm_name" class="text-xs text-gray-500 mb-2">
+            Par: <a href="#" class="hover:text-primary">{{ product.producer.farm_name }}</a>
+          </p>
+          <!-- <p class="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">{{ product.description || 'Aucune description disponible.' }}</p> -->
+
+          <div class="mt-auto">
+            <div class="flex justify-between items-center mb-3">
+              <p class="text-lg font-semibold text-primary">{{ product.price | currency:'XOF':'symbol':'1.0-0' }}</p>
+              <span class="text-sm text-gray-500">/ {{ product.unit }}</span>
+            </div>
+            <button class="w-full bg-primary text-white px-4 py-2 rounded-md !rounded-button hover:bg-opacity-90 transition text-sm flex items-center justify-center">
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+              Ajouter au panier
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="productsResponse && productsResponse.total > itemsPerPage" class="mt-12 flex justify-center items-center space-x-2">
+        <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+          Préc.
+        </button>
+
+        <ng-container *ngFor="let pageNum of paginationControls">
+            <button *ngIf="pageNum !== '...'"
+                    (click)="onPageChange(+pageNum)"
+                    [ngClass]="{'bg-primary text-white border-primary': currentPage === +pageNum, 'border-gray-300 hover:bg-gray-100': currentPage !== +pageNum}"
+                    class="px-3 py-1 border rounded-md text-sm">
+              {{ pageNum }}
+            </button>
+            <span *ngIf="pageNum === '...'" class="px-3 py-1 text-sm text-gray-500">...</span>
+        </ng-container>
+
+        <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+          Suiv.
+        </button>
+    </div>
+
+  </ng-container>
+
+  <ng-template #noProductsOrError>
+    <div *ngIf="!isLoading && !errorMessage" class="text-center py-10">
+      <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <p class="text-gray-500 text-lg">Aucun produit trouvé pour le moment.</p>
+      <!-- TODO: Maybe a button to clear filters or go back -->
+    </div>
+  </ng-template>
+  <ng-template #noProductsTemplate>
+     <div *ngIf="!isLoading && !errorMessage" class="text-center py-10">
+        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <p class="text-gray-500 text-lg">Aucun produit ne correspond à vos critères.</p>
+    </div>
+  </ng-template>
+
+</div>
